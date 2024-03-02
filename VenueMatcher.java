@@ -302,13 +302,20 @@ public class VenueMatcher {
     }
 
     private static void saveHiringDetails(Venue venue, int numberOfHours, String date, String time,
-                                           String eventName, String artistName, String requesterName) {
-        // Save hiring details to memory or file
-        // For example:
-        // newJobRequests.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
-        // You can also save to a file using FileHandler class
-        // fileHandler.writeJobRequestsToFile("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
-    }
+		     String eventName, String artistName, String requesterName) {
+			// Save hiring details to memory or file
+			newJobRequests.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
+			
+			// You can also save to a file using FileHandler class
+			FileHandler fileHandler = new FileHandler();
+			try {
+			List<String> jobRequest = new ArrayList<>();
+			jobRequest.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
+			fileHandler.writeJobRequestsToFile(jobRequest, "requests.csv");
+			} catch (CustomException e) {
+			System.out.println("Error writing job requests file: " + e.getMessage());
+		}
+}
 
     private static int getUserInput(Scanner scanner) {
         int userInput = 0;
