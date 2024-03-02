@@ -237,10 +237,94 @@ public class VenueMatcher {
         int venueChoice = getUserInput(1, selectedVenues.size()) - 1;
         Venue selectedVenue = selectedVenues.get(venueChoice);
 
-        // Handle the selected venue (you can add further logic here)
-        System.out.println("Selected venue: " + selectedVenue.getName());
+        // Display the attributes of the selected venue
+        System.out.println("\n-----------------------");
+        System.out.println(selectedVenue);
+        
+        // Prompt the user for further action
+        System.out.println("--------------------------------------------------");
+        System.out.println("1) Hire for $550.00/hour");
+        System.out.println("2) Back to venue list");
+        System.out.print("Please select: \n");
+        int actionChoice = getUserInput(1, 2);
+
+        switch (actionChoice) {
+            case 1:
+                // Show hiring menu
+                showHiringMenu(selectedVenue);
+                break;
+            case 2:
+                // Go back to the venue list
+                break;
+            default:
+                System.out.println("Invalid action choice.");
+        }
     }
 
+    private static void showHiringMenu(Venue venue) {
+        // Implement hiring menu logic here
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("-----------------------");
+        System.out.println("Hiring Details");
+        System.out.println("-----------------------");
+
+        System.out.print("Please enter number of hours: ");
+        int numberOfHours = getUserInput(scanner);
+
+        System.out.print("Please enter date: ");
+        String date = scanner.nextLine();
+
+        System.out.print("Please enter time: ");
+        String time = scanner.nextLine();
+
+        System.out.print("Event name: ");
+        String eventName = scanner.nextLine();
+
+        System.out.print("Artist name: ");
+        String artistName = scanner.nextLine();
+
+        System.out.print("Requester name: ");
+        String requesterName = scanner.nextLine();
+
+        System.out.print("Confirm order (y/n): ");
+        String confirmOrder = scanner.nextLine();
+
+        if (confirmOrder.equalsIgnoreCase("y")) {
+            // Save the hiring details to memory or file
+            saveHiringDetails(venue, numberOfHours, date, time, eventName, artistName, requesterName);
+            System.out.println("Order confirmed.");
+        } else if (confirmOrder.equalsIgnoreCase("n")) {
+            System.out.println("Order canceled.");
+        } else {
+            System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
+        }
+    }
+
+    private static void saveHiringDetails(Venue venue, int numberOfHours, String date, String time,
+                                           String eventName, String artistName, String requesterName) {
+        // Save hiring details to memory or file
+        // For example:
+        // newJobRequests.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
+        // You can also save to a file using FileHandler class
+        // fileHandler.writeJobRequestsToFile("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
+    }
+
+    private static int getUserInput(Scanner scanner) {
+        int userInput = 0;
+        boolean isValid = false;
+
+        while (!isValid) {
+            try {
+                userInput = Integer.parseInt(scanner.nextLine());
+                isValid = true;
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
+            }
+        }
+
+        return userInput;
+    }
 
     private static void selectFromVenueList() {
         System.out.println("--------------------------------------------------");
