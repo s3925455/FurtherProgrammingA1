@@ -190,7 +190,7 @@ public class VenueMatcher {
             }
         }
     }
-
+//----
     private static void selectByCategory() {
         System.out.println("--------------------------------------------------");
         System.out.println("2. Select by category");
@@ -202,25 +202,38 @@ public class VenueMatcher {
 
         int categoryChoice = getUserInput(1, 4);
 
-        // Display venues based on the selected category
-        String selectedCategory = null;
+        // Get the selected category
+        String selectedCategory = getCategoryChoice(categoryChoice);
+
+        // Display venues for the selected category and prompt for further action
+        if (selectedCategory != null) {
+            List<Venue> selectedVenues = displayVenues(selectedCategory);
+            if (selectedVenues != null) {
+                Venue selectedVenue = selectVenue(selectedVenues);
+                if (selectedVenue != null) {
+                    promptForAction(selectedVenue);
+                }
+            }
+        }
+    }
+
+    private static String getCategoryChoice(int categoryChoice) {
         switch (categoryChoice) {
             case 1:
-                selectedCategory = "Outdoor";
-                break;
+                return "Outdoor";
             case 2:
-                selectedCategory = "Indoor";
-                break;
+                return "Indoor";
             case 3:
-                selectedCategory = "Convertible";
-                break;
+                return "Convertible";
             case 4:
-                return; // Go back to the main menu
+                return null; // Go back to the main menu
             default:
                 System.out.println("Invalid category choice.\n");
-                return; // Go back to the main menu
+                return null; // Go back to the main menu
         }
+    }
 
+    private static List<Venue> displayVenues(String selectedCategory) {
         // Display venues for the selected category
         System.out.println("Venues under category: " + selectedCategory);
         int venueIndex = 1;
@@ -232,12 +245,17 @@ public class VenueMatcher {
                 venueIndex++;
             }
         }
+        return selectedVenues.isEmpty() ? null : selectedVenues;
+    }
 
+    private static Venue selectVenue(List<Venue> selectedVenues) {
         // Prompt the user to make a selection from the displayed venues
         System.out.print("Please select a venue: ");
         int venueChoice = getUserInput(1, selectedVenues.size()) - 1;
-        Venue selectedVenue = selectedVenues.get(venueChoice);
+        return selectedVenues.get(venueChoice);
+    }
 
+    private static void promptForAction(Venue selectedVenue) {
         // Display the attributes of the selected venue
         System.out.println("\n-----------------------");
         System.out.println(selectedVenue);
@@ -261,6 +279,10 @@ public class VenueMatcher {
                 System.out.println("Invalid action choice.\n");
         }
     }
+
+    
+    
+//    -------
 
     private static void showHiringMenu(Venue venue) {
         // Implement hiring menu logic here
