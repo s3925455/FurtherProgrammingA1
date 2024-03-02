@@ -15,6 +15,7 @@ class Venue {
     private String suitableFor;
     private String category;
 
+    // Constructor
     public Venue(String name, int capacity, String suitableFor, String category) {
         this.name = name;
         this.capacity = capacity;
@@ -22,6 +23,7 @@ class Venue {
         this.category = category;
     }
 
+    // Override toString method
     @Override
     public String toString() {
         return String.format("%s\nCapacity: %d\nCategory: %s\nSuitable for: %s\n",
@@ -59,6 +61,7 @@ class FileHandler {
             // Skip header line
             scanner.nextLine();
 
+            // Read venue data from file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
@@ -96,6 +99,7 @@ class FileHandler {
             // Skip header line
             scanner.nextLine();
 
+            // Read job requests from file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 jobRequests.add(line);
@@ -113,6 +117,7 @@ class FileHandler {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(filename, true));
 
+            // Write job requests to file
             for (String request : jobRequests) {
                 writer.println(request);
             }
@@ -135,6 +140,7 @@ public class VenueMatcher {
         FileHandler fileHandler = new FileHandler();
         List<String> existingJobRequests = null;
 
+        // Read existing data from files
         try {
             venues = fileHandler.readVenuesFromFile("venues.csv");
             existingJobRequests = fileHandler.readJobRequestsFromFile("requests.csv");
@@ -145,6 +151,7 @@ public class VenueMatcher {
 
         newJobRequests.addAll(existingJobRequests);
 
+        // Main menu loop
         while (true) {
             displayMainMenu();
 
@@ -161,7 +168,7 @@ public class VenueMatcher {
                     selectFromVenueList();
                     break;
                 case 4:
-                	selectFromMatchingList();
+                    selectFromMatchingList();
                     break;
                 case 5:
                     displayOrderSummary(); // Display order summary
@@ -181,6 +188,7 @@ public class VenueMatcher {
         }
     }
 
+    // Method to display new job requests
     private static void displayNewJobRequests() {
         if (newJobRequests.isEmpty()) {
             System.out.println("No New Jobs Entered\n");
@@ -190,7 +198,8 @@ public class VenueMatcher {
             }
         }
     }
-//----
+
+    // Method to select venues by category
     private static void selectByCategory() {
         System.out.println("--------------------------------------------------");
         System.out.println("2. Select by category");
@@ -217,6 +226,7 @@ public class VenueMatcher {
         }
     }
 
+    // Method to get the selected category
     private static String getCategoryChoice(int categoryChoice) {
         switch (categoryChoice) {
             case 1:
@@ -233,6 +243,7 @@ public class VenueMatcher {
         }
     }
 
+    // Method to display venues for a selected category
     private static List<Venue> displayVenues(String selectedCategory) {
         // Display venues for the selected category
         System.out.println("Venues under category: " + selectedCategory);
@@ -248,6 +259,7 @@ public class VenueMatcher {
         return selectedVenues.isEmpty() ? null : selectedVenues;
     }
 
+    // Method to select a venue from the displayed venues
     private static Venue selectVenue(List<Venue> selectedVenues) {
         // Prompt the user to make a selection from the displayed venues
         System.out.print("Please select a venue: ");
@@ -255,6 +267,7 @@ public class VenueMatcher {
         return selectedVenues.get(venueChoice);
     }
 
+    // Method to prompt the user for further action after selecting a venue
     private static void promptForAction(Venue selectedVenue) {
         // Display the attributes of the selected venue
         System.out.println("\n-----------------------");
@@ -280,10 +293,7 @@ public class VenueMatcher {
         }
     }
 
-    
-    
-//    -------
-
+    // Method to show hiring menu for a selected venue
     private static void showHiringMenu(Venue venue) {
         // Implement hiring menu logic here
         Scanner scanner = new Scanner(System.in);
@@ -324,6 +334,7 @@ public class VenueMatcher {
         }
     }
 
+    // Method to save hiring details
     private static void saveHiringDetails(Venue venue, int numberOfHours, String date, String time,
                                            String eventName, String artistName, String requesterName) {
         // Save hiring details to memory or file
@@ -343,12 +354,14 @@ public class VenueMatcher {
         orderSummaries.add(orderSummary);
     }
 
+    // Method to display order summary
     private static void displayOrderSummary() {
         for (String summary : orderSummaries) {
             System.out.println(summary);
         }
     }
 
+    // Method to get user input from scanner
     private static int getUserInput(Scanner scanner) {
         int userInput = 0;
         boolean isValid = false;
@@ -365,6 +378,7 @@ public class VenueMatcher {
         return userInput;
     }
 
+    // Method to select a venue from the venue list
     private static Venue selectFromVenueList() {
         System.out.println("\n--------------------------------------------------");
         System.out.println("3. Select from venue list");
@@ -389,7 +403,8 @@ public class VenueMatcher {
 
         return selectedVenue;
     }
-    
+
+    // Method to select a venue from the matching list
     private static void selectFromMatchingList() {
         System.out.println("\n--------------------------------------------------");
         System.out.println("Select from the matching list");
@@ -422,7 +437,7 @@ public class VenueMatcher {
         }
     }
 
-
+    // Method to display the main menu
     private static void displayMainMenu() {
         System.out.println("\nWelcome to Venue Matcher");
         System.out.println("--------------------------------------------------");
@@ -437,8 +452,7 @@ public class VenueMatcher {
         System.out.print("Please select: \n");
     }
 
-
-    
+    // Method to get user input with validation
     private static int getUserInput(int min, int max) {
         int choice = 0;
         boolean isValid = false;
