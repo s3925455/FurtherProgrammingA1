@@ -161,7 +161,7 @@ public class VenueMatcher {
                     selectFromVenueList();
                     break;
                 case 4:
-                    // Implement auto-matching events with suitable venues
+                	selectFromMatchingList();
                     break;
                 case 5:
                     displayOrderSummary(); // Display order summary
@@ -389,6 +389,38 @@ public class VenueMatcher {
 
         return selectedVenue;
     }
+    
+    private static void selectFromMatchingList() {
+        System.out.println("\n--------------------------------------------------");
+        System.out.println("Select from the matching list");
+        System.out.println("--------------------------------------------------");
+
+        // Randomly select a venue from memory
+        Random random = new Random();
+        int randomIndex = random.nextInt(venues.size());
+        Venue randomVenue = venues.get(randomIndex);
+
+        System.out.println("1) " + randomVenue.getName());
+        System.out.println("2) Go to main menu");
+
+        System.out.print("\nPlease select: ");
+        int choice = getUserInput(1, 2);
+
+        switch (choice) {
+            case 1:
+                // Display attributes of the randomly selected venue
+                System.out.println("\n--------------------------------------------------");
+                System.out.println(randomVenue);
+                // Continue with the logic in the promptForAction method
+                promptForAction(randomVenue);
+                break;
+            case 2:
+                // Go back to the main menu
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
 
 
     private static void displayMainMenu() {
@@ -405,6 +437,8 @@ public class VenueMatcher {
         System.out.print("Please select: \n");
     }
 
+
+    
     private static int getUserInput(int min, int max) {
         int choice = 0;
         boolean isValid = false;
