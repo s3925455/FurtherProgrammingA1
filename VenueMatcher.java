@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 
@@ -156,7 +157,7 @@ public class VenueMatcher {
                     displayNewJobRequests();
                     break;
                 case 2:
-                    // Implement browsing venues by category
+                    selectByCategory(venues);
                     break;
                 case 3:
                     // Implement searching venues by name
@@ -179,6 +180,36 @@ public class VenueMatcher {
                 default:
                     System.out.println("Please select a valid menu option.");
             }
+        }
+    }
+
+    private static void selectByCategory(List<Venue> venues) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("2. Select by category");
+        System.out.println("--------------------------------------------------");
+        System.out.println("1) Outdoor");
+        System.out.println("2) Indoor");
+        System.out.println("3) Convertible");
+        System.out.println("4) Go to main menu");
+
+        int categoryChoice = getUserInput(1, 4);
+        switch (categoryChoice) {
+            case 1:
+                // Handle selection of Outdoor category
+                break;
+            case 2:
+                // Handle selection of Indoor category
+                break;
+            case 3:
+                // Handle selection of Convertible category
+                break;
+            case 4:
+                // Return to main menu
+                break;
+            default:
+                System.out.println("Please select a valid category.");
+                selectByCategory(venues);
+                break;
         }
     }
 
@@ -212,7 +243,9 @@ public class VenueMatcher {
 
         while (!isValid) {
             try {
-                choice = Integer.parseInt(scanner.nextLine());
+                choice
+
+ = Integer.parseInt(scanner.nextLine());
                 if (choice >= min && choice <= max) {
                     isValid = true;
                 } else {
@@ -226,3 +259,4 @@ public class VenueMatcher {
         return choice;
     }
 }
+
