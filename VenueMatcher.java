@@ -4,11 +4,11 @@ import java.io.*;
 // Custom exception class
 class CustomException extends Exception {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public CustomException(String message) {
+    public CustomException(String message) {
         super(message);
     }
 }
@@ -127,7 +127,8 @@ class FileHandler {
 // Main class to run the program
 public class VenueMatcher {
     private static Scanner scanner = new Scanner(System.in);
-    private static List<String> newJobRequests = new ArrayList<>(); // Added here
+    private static List<String> newJobRequests = new ArrayList<>();
+    private static int numExistingRequests = 0; // Added to keep track of existing requests
     
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler();
@@ -143,6 +144,7 @@ public class VenueMatcher {
         }
 
         newJobRequests.addAll(existingJobRequests);
+        numExistingRequests = existingJobRequests.size();
 
         while (true) {
             displayMainMenu();
@@ -168,7 +170,7 @@ public class VenueMatcher {
                 case 6:
                     // Exit the program and write new job requests to file
                     try {
-                        fileHandler.writeJobRequestsToFile(newJobRequests, "requests.csv");
+                        fileHandler.writeJobRequestsToFile(newJobRequests.subList(numExistingRequests, newJobRequests.size()), "requests.csv");
                     } catch (CustomException e) {
                         System.out.println("Error: " + e.getMessage());
                     }
@@ -181,15 +183,15 @@ public class VenueMatcher {
     }
 
     private static void displayNewJobRequests() {
-        if (newJobRequests.isEmpty()) {
+        if (newJobRequests.size() <= numExistingRequests) {
             System.out.println("No New Jobs Entered");
         } else {
-            for (String jobRequest : newJobRequests) {
-                System.out.println(jobRequest);
+            for (int i = numExistingRequests; i < newJobRequests.size(); i++) {
+                System.out.println(newJobRequests.get(i));
             }
         }
     }
-
+    
     private static void displayMainMenu() {
         System.out.println("\nWelcome to Venue Matcher");
         System.out.println("--------------------------------------------------");
