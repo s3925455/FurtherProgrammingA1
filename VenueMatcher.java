@@ -3,7 +3,12 @@ import java.io.*;
 
 // Custom exception class
 class CustomException extends Exception {
-    public CustomException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public CustomException(String message) {
         super(message);
     }
 }
@@ -73,10 +78,33 @@ class FileHandler {
             }
             scanner.close();
         } catch (FileNotFoundException | ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            throw new CustomException("Error reading venues file: \n" + e.getMessage());
+            throw new CustomException("Error reading venues file: " + e.getMessage());
         }
 
         return venues;
+    }
+
+    // Method to read data from CSV file and return list of job requests
+    public List<String> readJobRequestsFromFile(String filename) throws CustomException {
+        List<String> jobRequests = new ArrayList<>();
+
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+
+            // Skip header line
+            scanner.nextLine();
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                jobRequests.add(line);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new CustomException("Error reading job requests file: " + e.getMessage());
+        }
+
+        return jobRequests;
     }
 }
 
@@ -87,9 +115,11 @@ public class VenueMatcher {
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler();
         List<Venue> venues = null;
+        List<String> jobRequests = null;
 
         try {
             venues = fileHandler.readVenuesFromFile("venues.csv");
+            jobRequests = fileHandler.readJobRequestsFromFile("requests.csv");
         } catch (CustomException e) {
             System.out.println("Error: " + e.getMessage());
             return;
@@ -105,7 +135,7 @@ public class VenueMatcher {
                     // Implement listing current job requests
                     break;
                 case 2:
-                    displaySubMenu();
+                    // Implement browsing venues by category
                     break;
                 case 3:
                     // Implement searching venues by name
@@ -118,18 +148,18 @@ public class VenueMatcher {
                     break;
                 case 6:
                     // Exit the program
-                    System.out.println("Exiting...\n");
+                    System.out.println("Exiting...");
                     return;
                 default:
-                    System.out.println("Please select a valid menu option.\n");
+                    System.out.println("Please select a valid menu option.");
             }
         }
     }
 
     private static void displayMainMenu() {
-        System.out.println("Welcome to Venue Matcher");
+        System.out.println("\nWelcome to Venue Matcher");
         System.out.println("--------------------------------------------------");
-        System.out.println("> Select from main menu");
+        System.out.println(" Select from main menu");
         System.out.println("--------------------------------------------------");
         System.out.println("1) List current job requests");
         System.out.println("2) Browse venue by category");
@@ -137,17 +167,6 @@ public class VenueMatcher {
         System.out.println("4) Auto-match events with suitable venues");
         System.out.println("5) Show order summary");
         System.out.println("6) Exit");
-        System.out.print("Please select: \n");
-    }
-
-    private static void displaySubMenu() {
-        System.out.println("--------------------------------------------------");
-        System.out.println("> Select by category");
-        System.out.println("--------------------------------------------------");
-        System.out.println("1) Outdoor");
-        System.out.println("2) Indoor");
-        System.out.println("3) Convertible");
-        System.out.println("4) Go to main menu");
         System.out.print("Please select: \n");
     }
 
@@ -161,10 +180,10 @@ public class VenueMatcher {
                 if (choice >= min && choice <= max) {
                     isValid = true;
                 } else {
-                    System.out.print("Invalid input. Please enter a number between " + min + " and " + max + ": \n");
+                    System.out.print("Invalid input. Please enter a number between " + min + " and " + max + ": ");
                 }
             } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a valid number: \n");
+                System.out.print("Invalid input. Please enter a valid number: ");
             }
         }
 
