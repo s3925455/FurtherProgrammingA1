@@ -48,42 +48,42 @@ class Venue {
 
 // FileHandler class to read data from CSV files
 class FileHandler {
-	// Method to read data from CSV file and return list of venues
-	public List<Venue> readVenuesFromFile(String filename) throws CustomException {
-	    List<Venue> venues = new ArrayList<>();
+    // Method to read data from CSV file and return list of venues
+    public List<Venue> readVenuesFromFile(String filename) throws CustomException {
+        List<Venue> venues = new ArrayList<>();
 
-	    try {
-	        File file = new File(filename);
-	        Scanner scanner = new Scanner(file);
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
 
-	        // Skip header line
-	        scanner.nextLine();
+            // Skip header line
+            scanner.nextLine();
 
-	        while (scanner.hasNextLine()) {
-	            String line = scanner.nextLine();
-	            String[] parts = line.split(",");
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
 
-	            // Check if the line has at least the minimum number of parts
-	            if (parts.length < 4) {
-	                System.out.println("Warning: Invalid format in venues file: " + line);
-	                continue; // Skip this line and proceed to the next one
-	            }
+                // Check if the line has at least the minimum number of parts
+                if (parts.length < 4) {
+                    System.out.println("Warning: Invalid format in venues file: " + line);
+                    continue; // Skip this line and proceed to the next one
+                }
 
-	            // Parse venue information
-	            String name = parts[0];
-	            int capacity = Integer.parseInt(parts[1]);
-	            String category = parts[2];
-	            String suitableFor = parts[3];
+                // Parse venue information
+                String name = parts[0];
+                int capacity = Integer.parseInt(parts[1]);
+                String category = parts[2];
+                String suitableFor = parts[3];
 
-	            venues.add(new Venue(name, capacity, category, suitableFor));
-	        }
-	        scanner.close();
-	    } catch (FileNotFoundException | NumberFormatException e) {
-	        throw new CustomException("Error reading venues file: " + e.getMessage());
-	    }
+                venues.add(new Venue(name, capacity, category, suitableFor));
+            }
+            scanner.close();
+        } catch (FileNotFoundException | NumberFormatException e) {
+            throw new CustomException("Error reading venues file: " + e.getMessage());
+        }
 
-	    return venues;
-	}
+        return venues;
+    }
 
     // Method to read data from CSV file and return list of job requests
     public List<String> readJobRequestsFromFile(String filename) throws CustomException {
@@ -129,6 +129,7 @@ public class VenueMatcher {
     private static Scanner scanner = new Scanner(System.in);
     private static List<String> newJobRequests = new ArrayList<>();
     private static List<Venue> venues = new ArrayList<>(); // Declared venues here
+    private static List<String> orderSummaries = new ArrayList<>(); // Maintain order summaries
 
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler();
@@ -163,7 +164,7 @@ public class VenueMatcher {
                     // Implement auto-matching events with suitable venues
                     break;
                 case 5:
-                    // Implement showing order summary
+                    displayOrderSummary(); // Display order summary
                     break;
                 case 6:
                     // Exit the program and write new job requests to file
@@ -175,14 +176,14 @@ public class VenueMatcher {
                     System.out.println("Exiting...");
                     return;
                 default:
-                    System.out.println("Please select a valid menu option.");
+                    System.out.println("Please select a valid menu option.\n");
             }
         }
     }
 
     private static void displayNewJobRequests() {
         if (newJobRequests.isEmpty()) {
-            System.out.println("No New Jobs Entered");
+            System.out.println("No New Jobs Entered\n");
         } else {
             for (String jobRequest : newJobRequests) {
                 System.out.println(jobRequest);
@@ -197,7 +198,7 @@ public class VenueMatcher {
         System.out.println("1) Outdoor");
         System.out.println("2) Indoor");
         System.out.println("3) Convertible");
-        System.out.println("4) Go to main menu");
+        System.out.println("4) Go to main menu\n");
 
         int categoryChoice = getUserInput(1, 4);
 
@@ -216,7 +217,7 @@ public class VenueMatcher {
             case 4:
                 return; // Go back to the main menu
             default:
-                System.out.println("Invalid category choice.");
+                System.out.println("Invalid category choice.\n");
                 return; // Go back to the main menu
         }
 
@@ -240,7 +241,7 @@ public class VenueMatcher {
         // Display the attributes of the selected venue
         System.out.println("\n-----------------------");
         System.out.println(selectedVenue);
-        
+
         // Prompt the user for further action
         System.out.println("--------------------------------------------------");
         System.out.println("1) Hire for $550.00/hour");
@@ -257,7 +258,7 @@ public class VenueMatcher {
                 // Go back to the venue list
                 break;
             default:
-                System.out.println("Invalid action choice.");
+                System.out.println("Invalid action choice.\n");
         }
     }
 
@@ -265,7 +266,7 @@ public class VenueMatcher {
         // Implement hiring menu logic here
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("-----------------------");
+        System.out.println("\n-----------------------");
         System.out.println("Hiring Details");
         System.out.println("-----------------------");
 
@@ -297,25 +298,34 @@ public class VenueMatcher {
         } else if (confirmOrder.equalsIgnoreCase("n")) {
             System.out.println("Order canceled.");
         } else {
-            System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
+            System.out.println("\nInvalid input. Please enter 'y' for yes or 'n' for no.\n");
         }
     }
 
     private static void saveHiringDetails(Venue venue, int numberOfHours, String date, String time,
-		     String eventName, String artistName, String requesterName) {
-			// Save hiring details to memory or file
-			newJobRequests.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
-			
-			// You can also save to a file using FileHandler class
-			FileHandler fileHandler = new FileHandler();
-			try {
-			List<String> jobRequest = new ArrayList<>();
-			jobRequest.add("Hiring Details: " + venue.getName() + ", Date: " + date + ", Time: " + time + ", Hours: " + numberOfHours);
-			fileHandler.writeJobRequestsToFile(jobRequest, "requests.csv");
-			} catch (CustomException e) {
-			System.out.println("Error writing job requests file: " + e.getMessage());
-		}
-}
+                                           String eventName, String artistName, String requesterName) {
+        // Save hiring details to memory or file
+        String orderSummary = String.format("Order Summary\n" +
+                "--------------------------------------------------\n" +
+                "Client: %s\n" +
+                "Venue: %s\n" +
+                "Event name: %s\n" +
+                "Artist: %s\n" +
+                "Event date: %s\n" +
+                "Event time: %s\n" +
+                "%d hours venue hire @ $550 -is: $%d\n" +
+                "Brokering commission 10%%: $%.2f\n",
+                requesterName, venue.getName(), eventName, artistName, date, time,
+                numberOfHours, numberOfHours * 550, numberOfHours * 550 * 0.1);
+
+        orderSummaries.add(orderSummary);
+    }
+
+    private static void displayOrderSummary() {
+        for (String summary : orderSummaries) {
+            System.out.println(summary);
+        }
+    }
 
     private static int getUserInput(Scanner scanner) {
         int userInput = 0;
@@ -326,7 +336,7 @@ public class VenueMatcher {
                 userInput = Integer.parseInt(scanner.nextLine());
                 isValid = true;
             } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a valid number: ");
+                System.out.print("\nInvalid input. Please enter a valid number: \n");
             }
         }
 
@@ -334,7 +344,7 @@ public class VenueMatcher {
     }
 
     private static void selectFromVenueList() {
-        System.out.println("--------------------------------------------------");
+        System.out.println("\n--------------------------------------------------");
         System.out.println("3. Select from venue list");
         System.out.println("--------------------------------------------------");
 
@@ -344,7 +354,7 @@ public class VenueMatcher {
             venueIndex++;
         }
 
-        System.out.print("Please select: ");
+        System.out.print("\nPlease select: \n");
         int venueChoice = getUserInput(1, venues.size());
         Venue selectedVenue = venues.get(venueChoice - 1);
         // Implement the logic for venue selection here
@@ -361,7 +371,7 @@ public class VenueMatcher {
         System.out.println("4) Auto-match events with suitable venues");
         System.out.println("5) Show order summary");
         System.out.println("6) Exit");
-        System.out.print("Please select: ");
+        System.out.print("Please select: \n");
     }
 
     private static int getUserInput(int min, int max) {
@@ -374,10 +384,10 @@ public class VenueMatcher {
                 if (choice >= min && choice <= max) {
                     isValid = true;
                 } else {
-                    System.out.print("Invalid input. Please enter a number between " + min + " and " + max + ": ");
+                    System.out.print("\nInvalid input. Please enter a number between " + min + " and " + max + ": \n");
                 }
             } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a valid number: ");
+                System.out.print("\nInvalid input. Please enter a valid number: \n");
             }
         }
 
