@@ -365,22 +365,31 @@ public class VenueMatcher {
         return userInput;
     }
 
-    private static void selectFromVenueList() {
+    private static Venue selectFromVenueList() {
         System.out.println("\n--------------------------------------------------");
         System.out.println("3. Select from venue list");
         System.out.println("--------------------------------------------------");
 
+        // Display all venues in memory
         int venueIndex = 1;
         for (Venue venue : venues) {
             System.out.println(venueIndex + ") " + venue.getName());
             venueIndex++;
         }
 
-        System.out.print("\nPlease select: \n");
+        // Prompt the user to select a venue
+        System.out.print("\nPlease select a venue: ");
         int venueChoice = getUserInput(1, venues.size());
+
+        // Retrieve the selected venue from the list
         Venue selectedVenue = venues.get(venueChoice - 1);
-        // Implement the logic for venue selection here
+
+        // Continue with the logic in the promptForAction method
+        promptForAction(selectedVenue);
+
+        return selectedVenue;
     }
+
 
     private static void displayMainMenu() {
         System.out.println("\nWelcome to Venue Matcher");
