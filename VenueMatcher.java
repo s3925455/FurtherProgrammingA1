@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.io.*;
 
@@ -160,7 +159,7 @@ public class VenueMatcher {
                     selectByCategory(venues);
                     break;
                 case 3:
-                    // Implement searching venues by name
+                    selectFromVenueList(venues);
                     break;
                 case 4:
                     // Implement auto-matching events with suitable venues
@@ -213,6 +212,24 @@ public class VenueMatcher {
         }
     }
 
+    private static void selectFromVenueList(List<Venue> venues) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("3. Select from venue list");
+        System.out.println("--------------------------------------------------");
+        for (int i = 0; i < venues.size(); i++) {
+            System.out.println((i + 1) + ") " + venues.get(i).getName());
+        }
+        System.out.println((venues.size() + 1) + ") Go to main menu");
+        System.out.print("Please select: ");
+
+        int venueChoice = getUserInput(1, venues.size() + 1);
+        if (venueChoice <= venues.size()) {
+            Venue selectedVenue = venues.get(venueChoice - 1);
+            System.out.println("Selected venue: " + selectedVenue.getName());
+            // Implement further actions with the selected venue
+        }
+    }
+
     private static void displayNewJobRequests() {
         if (newJobRequests.size() <= numExistingRequests) {
             System.out.println("No New Jobs Entered");
@@ -222,7 +239,7 @@ public class VenueMatcher {
             }
         }
     }
-    
+
     private static void displayMainMenu() {
         System.out.println("\nWelcome to Venue Matcher");
         System.out.println("--------------------------------------------------");
@@ -234,7 +251,7 @@ public class VenueMatcher {
         System.out.println("4) Auto-match events with suitable venues");
         System.out.println("5) Show order summary");
         System.out.println("6) Exit");
-        System.out.print("Please select: \n");
+        System.out.print("Please select: ");
     }
 
     private static int getUserInput(int min, int max) {
@@ -243,9 +260,7 @@ public class VenueMatcher {
 
         while (!isValid) {
             try {
-                choice
-
- = Integer.parseInt(scanner.nextLine());
+                choice = Integer.parseInt(scanner.nextLine());
                 if (choice >= min && choice <= max) {
                     isValid = true;
                 } else {
@@ -259,4 +274,3 @@ public class VenueMatcher {
         return choice;
     }
 }
-
