@@ -1,0 +1,26 @@
+How to run the program:
+
+Import ZIP file A1.zip into ECLIPSE
+
+To run the program
+
+Open Main.java and click RUN
+
+Main menu is displayed :
+
+
+Welcome to Venue Matcher
+--------------------------------------------------
+ Select from main menu
+--------------------------------------------------
+1) List current job requests
+2) Browse venue by category
+3) Search venue by name
+4) Auto-match events with suitable venues
+5) Show order summary
+6) Exit
+Please select: 
+
+
+
+Make a selection from the menu of your choice and follow the instructions thru various menu options as directed.
