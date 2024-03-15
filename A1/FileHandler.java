@@ -80,18 +80,24 @@ class FileHandler {
 	}
 
 	// Method to write job requests to CSV file
-	public void writeJobRequestsToFile(List<String> jobRequests, String filename) throws CustomException {
-		try {
-			PrintWriter writer = new PrintWriter(new FileWriter(filename, true));
+//	public void writeJobRequestsToFile(List<String> jobRequests, String filename) throws CustomException {
+	public void writeJobRequestsToFile(List<String> finalSummaries, String filename) throws CustomException {
+        if (finalSummaries == null) {
+        	System.out.println("Null Jobs to write to " + filename + " Exiting...");
+            return; // Exit the method if there are no job requests to write
+        }
 
-			// Write job requests to file
-			for (String request : jobRequests) {
-				writer.println(request);
-			}
+        if (finalSummaries.isEmpty()) {
+            System.out.println("No job requests to write. Exiting...");
+            return; // Exit the method if there are no job requests to write
+        }
 
-			writer.close();
-		} catch (IOException e) {
-			throw new CustomException("Error writing job requests file: " + e.getMessage());
-		}
-	}
-}
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            // Write job requests to file
+            for (String request : finalSummaries) {
+                writer.println(request);
+            }
+        } catch (IOException e) {
+            throw new CustomException("Error writing job requests file: " + e.getMessage());
+        }
+	}}
