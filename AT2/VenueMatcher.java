@@ -9,7 +9,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VenueMatcher extends Application {
+    private List<String> oldJobRequests = new ArrayList<>(); // Declare old job requests list
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,7 +54,6 @@ public class VenueMatcher extends Application {
         exitButton.setOnAction(event -> primaryStage.close());
 
         vbox.getChildren().addAll(
-                userInput, okButton, cancelButton,
                 listJobRequests, browseByCategory, searchByName,
                 autoMatchEvents, showOrderSummary, exitButton
         );
@@ -65,7 +68,7 @@ public class VenueMatcher extends Application {
             int choice = Integer.parseInt(input);
             switch (choice) {
                 case 1:
-                    System.out.println("Handling option 1: List current job requests...");
+                    launchDisplayOldJobRequest(); // Launch DisplayOldJobRequests
                     break;
                 case 2:
                     System.out.println("Handling option 2: Browse venue by category...");
@@ -101,5 +104,9 @@ public class VenueMatcher extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void launchDisplayOldJobRequest() {
+        DisplayOldJobRequests.main(new String[]{});
     }
 }

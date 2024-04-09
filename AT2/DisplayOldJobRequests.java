@@ -1,32 +1,75 @@
 package AT2;
 
-import java.util.ArrayList;
+import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import java.util.List;
 
-public class DisplayOldJobRequests {
-    private List<String> oldJobRequests = new ArrayList<>();
 
-    public DisplayOldJobRequests(List<String> oldJobRequests) {
-        this.oldJobRequests.addAll(oldJobRequests);
+public class DisplayOldJobRequests extends Application {
+    private ObservableList<String> oldJobRequests = FXCollections.observableArrayList();
+
+    @Override
+    public void start(Stage primaryStage) {
+    	FileHandler fileHandler = new FileHandler();
+		List<String> existingJobRequests = null;
+		
+        primaryStage.setTitle("Old Job Requests");
+        
+        
+        try {
+			existingJobRequests = fileHandler.readJobRequestsFromFile("requests.csv");
+		} catch (CustomException e) {
+			System.out.println("Error: " + e.getMessage());
+			return;
+		}
+
+		oldJobRequests.addAll(existingJobRequests);
+
+     // Create TableView
+        TableView<String> tableView = new TableView<>();
+        TableColumn<String, String> column = new TableColumn<>("Job Requests");
+        column.setCellValueFactory(data -> {
+            String value = data.getValue();
+            return value != null ? new SimpleStringProperty(value) : new SimpleStringProperty("");
+        });
+        tableView.getColumns().add(column);
+        tableView.setItems(oldJobRequests);
+
+        // Create Exit button
+        Button exitButton = new Button("Exit");
+        exitButton.setOnAction(event -> {
+            primaryStage.close();
+            
+            
+        });
+        
+        
+
+        // Layout
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(tableView, exitButton);
+
+        Scene scene = new Scene(vbox, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    public void displayOldJobRequests() {
-        if (oldJobRequests.isEmpty()) {
-            System.out.println("\nNo Jobs to Display\n");
-        } else {
-            for (String oldJobRequest : oldJobRequests) {
-                System.out.println(oldJobRequest);
-            }
-        }
+    public void displayOldJobRequests(List<String> jobRequests) {
+        oldJobRequests.addAll(jobRequests);
     }
 
-    // Getters and setters if needed
-
-    public List<String> getOldJobRequests() {
-        return oldJobRequests;
-    }
-
-    public void setOldJobRequests(List<String> oldJobRequests) {
-        this.oldJobRequests = oldJobRequests;
+    public static void main(String[] args) {
+        Application.launch(args);
+        
+        
     }
 }
