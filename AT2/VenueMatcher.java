@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VenueMatcher extends Application {
-	private List<String> oldJobRequests = new ArrayList<>(); // Declare old job requests list
+public class VenueMatcher<SelectFromVenueList> extends Application {
+//	private List<String> oldJobRequests = new ArrayList<>(); // Declare old job requests list
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -41,7 +41,7 @@ public class VenueMatcher extends Application {
 		// Add menu options
 		Button listJobRequests = new Button("List current job requests");
 		Button browseByCategory = new Button("Browse venue by category");
-		Button searchByName = new Button("Search venue by name");
+		Button searchByName = new Button("Search by venue");
 		Button autoMatchEvents = new Button("Auto-match events with suitable venues");
 		Button showOrderSummary = new Button("Show order summary");
 		Button exitButton = new Button("Exit");
@@ -69,10 +69,10 @@ public class VenueMatcher extends Application {
 				launchDisplayOldJobRequest(primaryStage); // Launch DisplayOldJobRequests
 				break;
 			case 2:
-				System.out.println("Handling option 2: Browse venue by category...");
+				launchSelectByCategory(primaryStage);
 				break;
 			case 3:
-				System.out.println("Handling option 3: Search venue by name...");
+				launchSelectFromVenueList(primaryStage);
 				break;
 			case 4:
 				System.out.println("Handling option 4: Auto-match events with suitable venues...");
@@ -108,6 +108,26 @@ public class VenueMatcher extends Application {
 		try {
 			DisplayOldJobRequests displayOldJobRequest = new DisplayOldJobRequests();
 			displayOldJobRequest.start(new Stage()); // Create a new stage for DisplayOldJobRequests
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void launchSelectByCategory(Stage primaryStage) {
+		try {
+			SelectByCategory selectByCategory = new SelectByCategory(null);
+			selectByCategory.start(new Stage()); // Create a new stage for SelectByCategory
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	private void launchSelectFromVenueList(Stage primaryStage) {
+		try {
+			SelectFromVenueList selectFromVenueList = new SelectFromVenueList(null);
+			selectFromVenueList.start(new Stage()); // Create a new stage for SelectFromVenueList
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
