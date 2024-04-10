@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml" fx:controller="AT2.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="300" prefWidth="420" xmlns:fx="http://javafx.com/fxml" fx:controller="AT2.LoginController">
     <children>
         <VBox alignment="CENTER" spacing="10">
             <Label text="Username:"/>
