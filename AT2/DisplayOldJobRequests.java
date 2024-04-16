@@ -6,8 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,6 +23,7 @@ public class DisplayOldJobRequests extends Application {
     public void start(Stage primaryStage) {
     	FileHandler fileHandler = new FileHandler();
 		List<String> existingJobRequests = null;
+		ScrollPane scrollPane = new ScrollPane();////
 		
         primaryStage.setTitle("Old Job Requests");
         
@@ -49,22 +52,19 @@ public class DisplayOldJobRequests extends Application {
         exitButton.setOnAction(event -> {
             primaryStage.close();
             
-            
         });
         
         
 
         // Layout
         VBox vbox = new VBox(10);
-        
+//Scrolling functionality
+		scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);////
+		scrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);////
         
         vbox.getChildren().addAll(tableView, exitButton);
 
-        Scene scene = new Scene(vbox, 400, 300);
-        
-//--
-        
-    //--    
+        Scene scene = new Scene(vbox, 400, 300);   
         primaryStage.setScene(scene);
         primaryStage.show();
     }

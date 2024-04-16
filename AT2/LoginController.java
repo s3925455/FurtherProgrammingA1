@@ -24,6 +24,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         login.setOnAction(event -> {
+
             String username = name.getText();
             String pass = password.getText();
 
@@ -34,9 +35,11 @@ public class LoginController {
                     openVenueMatcher(stage); // Open VenueMatcher when login is successful
                 } else {
                     showAlert("Login Failed", "Invalid username or password.");
+                    clearFields();
                 }
             } else {
                 showAlert("Error", "Empty username or password.");
+                clearFields();
             }
         });
     }
