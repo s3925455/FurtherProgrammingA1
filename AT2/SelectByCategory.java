@@ -54,9 +54,4 @@ public class SelectByCategory extends Application {
         // Add your logic here to display venues based on the selected category
     }
 
-//    public static void main(String[] args) {
-//        // Example usage
-//        List<Venue> venues = new ArrayList<>(); // Initialize your list of venues
-//        launch(args);
-//    }
 }

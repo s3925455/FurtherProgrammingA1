@@ -12,124 +12,122 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VenueMatcher<SelectFromVenueList> extends Application {
-//	private List<String> oldJobRequests = new ArrayList<>(); // Declare old job requests list
+public class VenueMatcher extends Application {
+    private List<String> oldJobRequests = new ArrayList<>(); // Declare old job requests list
 
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle("Venue Matcher Menu");
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Venue Matcher Menu");
 
-		// Create components
-		TextField userInput = new TextField();
-		userInput.setPromptText("Enter your choice");
-		Button okButton = new Button("OK");
-		Button cancelButton = new Button("Cancel");
+        // Create components
+        TextField userInput = new TextField();
+        userInput.setPromptText("Enter your choice");
+        Button okButton = new Button("OK");
+        Button cancelButton = new Button("Cancel");
 
-		// Set actions for buttons
-		okButton.setOnAction(event -> {
-			String input = userInput.getText();
-			handleUserInput(input, primaryStage); // Pass primaryStage to handleUserInput
-			userInput.clear(); // Clear input field after handling input
-		});
+        // Set actions for buttons
+        okButton.setOnAction(event -> {
+            String input = userInput.getText();
+            handleUserInput(input, primaryStage); // Pass primaryStage to handleUserInput
+            userInput.clear(); // Clear input field after handling input
+        });
 
-		cancelButton.setOnAction(event -> primaryStage.close());
+        cancelButton.setOnAction(event -> primaryStage.close());
 
-		// Layout
-		VBox vbox = new VBox(10);
-		vbox.setPadding(new Insets(20));
+        // Layout
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(20));
 
-		// Add menu options
-		Button listJobRequests = new Button("List current job requests");
-		Button browseByCategory = new Button("Browse venue by category");
-		Button searchByName = new Button("Search by venue");
-		Button autoMatchEvents = new Button("Auto-match events with suitable venues");
-		Button showOrderSummary = new Button("Show order summary");
-		Button exitButton = new Button("Exit");
+        // Add menu options
+        Button listJobRequests = new Button("List current job requests");
+        Button browseByCategory = new Button("Browse venue by category");
+        Button searchByName = new Button("Search by venue");
+        Button autoMatchEvents = new Button("Auto-match events with suitable venues");
+        Button showOrderSummary = new Button("Show order summary");
+        Button exitButton = new Button("Exit");
 
-		listJobRequests.setOnAction(event -> handleUserInput("1", primaryStage));
-		browseByCategory.setOnAction(event -> handleUserInput("2", primaryStage));
-		searchByName.setOnAction(event -> handleUserInput("3", primaryStage));
-		autoMatchEvents.setOnAction(event -> handleUserInput("4", primaryStage));
-		showOrderSummary.setOnAction(event -> handleUserInput("5", primaryStage));
-		exitButton.setOnAction(event -> primaryStage.close());
+        listJobRequests.setOnAction(event -> handleUserInput("1", primaryStage));
+        browseByCategory.setOnAction(event -> handleUserInput("2", primaryStage));
+        searchByName.setOnAction(event -> handleUserInput("3", primaryStage));
+        autoMatchEvents.setOnAction(event -> handleUserInput("4", primaryStage));
+        showOrderSummary.setOnAction(event -> handleUserInput("5", primaryStage));
+        exitButton.setOnAction(event -> primaryStage.close());
 
-		vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents, showOrderSummary,
-				exitButton);
+        vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents, showOrderSummary,
+                exitButton);
 
-		Scene scene = new Scene(vbox, 400, 400);
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
+        Scene scene = new Scene(vbox, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-	private void handleUserInput(String input, Stage primaryStage) {
-		try {
-			int choice = Integer.parseInt(input);
-			switch (choice) {
-			case 1:
-				launchDisplayOldJobRequest(primaryStage); // Launch DisplayOldJobRequests
-				break;
-			case 2:
-				launchSelectByCategory(primaryStage);
-				break;
-			case 3:
-				launchSelectFromVenueList(primaryStage);
-				break;
-			case 4:
-				System.out.println("Handling option 4: Auto-match events with suitable venues...");
-				break;
-			case 5:
-				System.out.println("Handling option 5: Show order summary...");
-				break;
-			case 6:
-				System.out.println("Exiting...");
-				System.exit(0);
-				break;
-			default:
-				showAlert("Invalid Input", "Please enter a valid menu option.");
-			}
-		} catch (NumberFormatException e) {
-			showAlert("Error", "Please enter a valid number.");
-		}
-	}
+    private void handleUserInput(String input, Stage primaryStage) {
+        try {
+            int choice = Integer.parseInt(input);
+            switch (choice) {
+                case 1:
+                    launchDisplayOldJobRequest(primaryStage); // Launch DisplayOldJobRequests
+                    break;
+                case 2:
+                    launchSelectByCategory(primaryStage);
+                    break;
+                case 3:
+                    launchSelectFromVenueList(primaryStage);
+                    break;
+                case 4:
+                    System.out.println("Handling option 4: Auto-match events with suitable venues...");
+                    break;
+                case 5:
+                    System.out.println("Handling option 5: Show order summary...");
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    showAlert("Invalid Input", "Please enter a valid menu option.");
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Please enter a valid number.");
+        }
+    }
 
-	private void showAlert(String title, String message) {
-		Alert alert = new Alert(Alert.AlertType.WARNING);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-	private void launchDisplayOldJobRequest(Stage primaryStage) {
-		try {
-			DisplayOldJobRequests displayOldJobRequest = new DisplayOldJobRequests();
-			displayOldJobRequest.start(new Stage()); // Create a new stage for DisplayOldJobRequests
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void launchSelectByCategory(Stage primaryStage) {
-		try {
-			SelectByCategory selectByCategory = new SelectByCategory(null);
-			selectByCategory.start(new Stage()); // Create a new stage for SelectByCategory
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	private void launchSelectFromVenueList(Stage primaryStage) {
-		try {
-			SelectFromVenueList selectFromVenueList = new SelectFromVenueList(null);
-			selectFromVenueList.start(new Stage()); // Create a new stage for SelectFromVenueList
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    private void launchDisplayOldJobRequest(Stage primaryStage) {
+        try {
+            DisplayOldJobRequests displayOldJobRequest = new DisplayOldJobRequests();
+            displayOldJobRequest.start(new Stage()); // Create a new stage for DisplayOldJobRequests
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchSelectByCategory(Stage primaryStage) {
+        try {
+            SelectByCategory selectByCategory = new SelectByCategory(null);
+            selectByCategory.start(new Stage()); // Create a new stage for SelectByCategory
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchSelectFromVenueList(Stage primaryStage) {
+        try {
+            SelectFromVenueList selectFromVenueList = new SelectFromVenueList(null);
+            selectFromVenueList.start(new Stage()); // Create a new stage for SelectFromVenueList
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
