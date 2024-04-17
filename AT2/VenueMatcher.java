@@ -124,7 +124,7 @@ public class VenueMatcher extends Application {
 
     private void launchSelectFromVenueList(Stage primaryStage) {
         try {
-            SelectFromVenueList selectFromVenueList = new SelectFromVenueList(null);
+            SelectFromVenueList selectFromVenueList = new SelectFromVenueList();
             selectFromVenueList.start(new Stage()); // Create a new stage for SelectFromVenueList
         } catch (Exception e) {
             e.printStackTrace();

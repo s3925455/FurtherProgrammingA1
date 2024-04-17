@@ -1,60 +1,83 @@
+
 package AT2;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public class SelectFromVenueList extends Application {
-    private ObservableList<Venue> venues = FXCollections.observableArrayList();
-
-    public SelectFromVenueList(List<Venue> venueList) {
-        if (venueList != null) {
-            venues.addAll(venueList);
-        }
-    }
+    private ObservableList<String> selectFromVenueList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("\n--------------------------------------------------");
-        System.out.println("3. Select from venue list");
-        System.out.println("--------------------------------------------------");
+    	FileHandler fileHandler = new FileHandler();
+		List<String> existingJobRequests = null;
+		ScrollPane scrollPane = new ScrollPane();////
+		
+        primaryStage.setTitle("Select from Venue List");
+        
+        
+        try {
+			existingJobRequests = fileHandler.readJobRequestsFromFile("venues.csv");
+		} catch (CustomException e) {
+			System.out.println("Error: " + e.getMessage());
+			return;
+		}
 
-        ListView<Venue> venueListView = new ListView<>(venues);
+        selectFromVenueList.addAll(existingJobRequests);
 
-        // Create a dialog box to display the venue list
-        Alert venueDialog = new Alert(Alert.AlertType.CONFIRMATION);
-        venueDialog.setTitle("Select Venue");
-        venueDialog.setHeaderText("Select a venue from the list:");
-        venueDialog.getDialogPane().setContent(new VBox(venueListView));
-        venueDialog.getButtonTypes().clear();
-        venueDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        venueDialog.showAndWait();
+     // Create TableView
+        TableView<String> tableView = new TableView<>();
+        TableColumn<String, String> column = new TableColumn<>("Venue List");
+        column.setCellValueFactory(data -> {
+            String value = data.getValue();
+            return value != null ? new SimpleStringProperty(value) : new SimpleStringProperty("");
+        });
+        tableView.getColumns().add(column);
+        tableView.setItems(selectFromVenueList);
 
-        Optional<ButtonType> result = Optional.ofNullable(venueDialog.getResult());
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            Venue selectedVenue = venueListView.getSelectionModel().getSelectedItem();
-            if (selectedVenue != null) {
-                System.out.println("Selected Venue: " + selectedVenue.getName());
-                primaryStage.close(); // Close the dialog
-            } else {
-                showAlert("Invalid Selection", "Please select a venue from the list.");
-            }
-        }
+        // Create Exit button
+        Button exitButton = new Button("Exit");
+        exitButton.setOnAction(event -> {
+            primaryStage.close();
+            
+        });
+        
+        
+
+        // Layout
+        VBox vbox = new VBox(10);
+//Scrolling functionality
+		scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);////
+		scrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);////
+        
+        vbox.getChildren().addAll(tableView, exitButton);
+
+        Scene scene = new Scene(vbox, 800, 600);   
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    public void displayOldJobRequests(List<String> jobRequests) {
+    	selectFromVenueList.addAll(jobRequests);
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
+        
+        
     }
 }
+

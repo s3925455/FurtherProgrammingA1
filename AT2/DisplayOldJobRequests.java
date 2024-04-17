@@ -64,7 +64,7 @@ public class DisplayOldJobRequests extends Application {
         
         vbox.getChildren().addAll(tableView, exitButton);
 
-        Scene scene = new Scene(vbox, 400, 300);   
+        Scene scene = new Scene(vbox, 800, 600);   
         primaryStage.setScene(scene);
         primaryStage.show();
     }
