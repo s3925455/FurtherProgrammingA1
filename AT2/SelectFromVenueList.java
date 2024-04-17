@@ -84,6 +84,11 @@ public class SelectFromVenueList extends Application {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
 
+            // Skip the first line
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
+
             int number = 1;
             while (scanner.hasNextLine()) {
                 String venue = scanner.nextLine();
