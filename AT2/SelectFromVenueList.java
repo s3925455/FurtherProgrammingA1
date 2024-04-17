@@ -1,83 +1,142 @@
-
 package AT2;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Scanner;
 
 public class SelectFromVenueList extends Application {
-    private ObservableList<String> selectFromVenueList = FXCollections.observableArrayList();
+    private ObservableList<VenueItem> venueItems = FXCollections.observableArrayList();
+    private ObservableList<String> selectedVenues = FXCollections.observableArrayList();
+    private TextField userInput;
 
     @Override
     public void start(Stage primaryStage) {
-    	FileHandler fileHandler = new FileHandler();
-		List<String> existingJobRequests = null;
-		ScrollPane scrollPane = new ScrollPane();////
-		
         primaryStage.setTitle("Select from Venue List");
-        
-        
-        try {
-			existingJobRequests = fileHandler.readJobRequestsFromFile("venues.csv");
-		} catch (CustomException e) {
-			System.out.println("Error: " + e.getMessage());
-			return;
-		}
 
-        selectFromVenueList.addAll(existingJobRequests);
+        // Read venues from CSV file and populate the TableView
+        readVenuesFromFile("venues.csv");
 
-     // Create TableView
-        TableView<String> tableView = new TableView<>();
-        TableColumn<String, String> column = new TableColumn<>("Venue List");
-        column.setCellValueFactory(data -> {
-            String value = data.getValue();
-            return value != null ? new SimpleStringProperty(value) : new SimpleStringProperty("");
-        });
-        tableView.getColumns().add(column);
-        tableView.setItems(selectFromVenueList);
+        // Create TableView
+        TableView<VenueItem> tableView = new TableView<>();
+        TableColumn<VenueItem, Integer> numberColumn = new TableColumn<>("No.");
+        numberColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumber()).asObject());
+
+        TableColumn<VenueItem, String> venueColumn = new TableColumn<>("Venue");
+        venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVenue()));
+
+        tableView.getColumns().addAll(numberColumn, venueColumn);
+        tableView.setItems(venueItems);
+
+        // Create input box for valid number
+        userInput = new TextField();
+        userInput.setPromptText("Enter a valid number");
+
+        // Create Clear button
+        Button clearButton = new Button("Clear");
+        clearButton.setOnAction(event -> userInput.clear());
+
+        // Create OK button
+        Button okButton = new Button("OK");
+        okButton.setOnAction(event -> handleUserInput());
 
         // Create Exit button
         Button exitButton = new Button("Exit");
-        exitButton.setOnAction(event -> {
-            primaryStage.close();
-            
-        });
-        
-        
+        exitButton.setOnAction(event -> primaryStage.close());
 
         // Layout
-        VBox vbox = new VBox(10);
-//Scrolling functionality
-		scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);////
-		scrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);////
-        
-        vbox.getChildren().addAll(tableView, exitButton);
+        VBox vbox = new VBox(100);
+        HBox hbox = new HBox(100);
+        ScrollPane scrollPane = new ScrollPane(tableView);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        Scene scene = new Scene(vbox, 800, 600);   
+        hbox.getChildren().addAll(userInput, clearButton, okButton, exitButton);
+        vbox.getChildren().addAll(scrollPane, hbox);
+
+        Scene scene = new Scene(vbox, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public void displayOldJobRequests(List<String> jobRequests) {
-    	selectFromVenueList.addAll(jobRequests);
+    private void readVenuesFromFile(String filename) {
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+
+            int number = 1;
+            while (scanner.hasNextLine()) {
+                String venue = scanner.nextLine();
+                venueItems.add(new VenueItem(number, venue));
+                number++;
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            showAlert("Error", "Failed to read venues from file: " + filename);
+        }
+    }
+
+    private void handleUserInput() {
+        String input = userInput.getText().trim();
+        try {
+            int selectedIndex = Integer.parseInt(input);
+            if (selectedIndex >= 1 && selectedIndex <= venueItems.size()) {
+                String selectedVenue = venueItems.get(selectedIndex - 1).getVenue();
+                selectedVenues.add(selectedVenue);
+                userInput.clear(); // Clear input box
+            } else {
+                showAlert("Invalid Input", "Please enter a valid number from the list.");
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Input", "Please enter a valid number.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {
         Application.launch(args);
-        
-        
+    }
+
+    // Class representing a venue item with a unique number
+    public static class VenueItem {
+        private final int number;
+        private final String venue;
+
+        public VenueItem(int number, String venue) {
+            this.number = number;
+            this.venue = venue;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public String getVenue() {
+            return venue;
+        }
     }
 }
-
