@@ -18,12 +18,15 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class SelectFromVenueList extends Application {
     private ObservableList<VenueItem> venueItems = FXCollections.observableArrayList();
     private ObservableList<String> selectedVenues = FXCollections.observableArrayList();
     private TextField userInput;
+    private List<String> columnHeadings = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -34,18 +37,20 @@ public class SelectFromVenueList extends Application {
 
         // Create TableView
         TableView<VenueItem> tableView = new TableView<>();
-        TableColumn<VenueItem, Integer> numberColumn = new TableColumn<>("No.");
-        numberColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumber()).asObject());
 
-        TableColumn<VenueItem, String> venueColumn = new TableColumn<>("Venue");
-        venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVenue()));
+        // Create TableColumns dynamically based on column headings
+        for (int i = 0; i < columnHeadings.size(); i++) {
+            final int columnIndex = i;
+            TableColumn<VenueItem, String> column = new TableColumn<>(columnHeadings.get(i));
+            column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getData(columnIndex)));
+            tableView.getColumns().add(column);
+        }
 
-        // Set column resizing policy for the "Venue" column only
-        venueColumn.setResizable(true);
-        venueColumn.setMinWidth(800);
-        venueColumn.setMaxWidth(Double.MAX_VALUE); // Allow it to expand
+        // Create a column for Unique ID
+        TableColumn<VenueItem, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
+        tableView.getColumns().add(0, idColumn); // Insert at index 0
 
-        tableView.getColumns().addAll(numberColumn, venueColumn);
         tableView.setItems(venueItems);
 
         // Create input box for valid number
@@ -84,17 +89,22 @@ public class SelectFromVenueList extends Application {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
 
-            // Skip the first line
+            // Read column headings from the first line
             if (scanner.hasNextLine()) {
-                scanner.nextLine();
+                String[] headings = scanner.nextLine().split(",");
+                for (String heading : headings) {
+                    columnHeadings.add(heading);
+                }
             }
 
+            // Read venue data and populate VenueItems
             int number = 1;
             while (scanner.hasNextLine()) {
-                String venue = scanner.nextLine();
-                venueItems.add(new VenueItem(number, venue));
+                String[] data = scanner.nextLine().split(",");
+                venueItems.add(new VenueItem(number, data));
                 number++;
             }
+
             scanner.close();
         } catch (FileNotFoundException e) {
             showAlert("Error", "Failed to read venues from file: " + filename);
@@ -129,22 +139,32 @@ public class SelectFromVenueList extends Application {
         Application.launch(args);
     }
 
-    // Class representing a venue item with a unique number
+    // Class representing a venue item with a unique ID, number, and data array
     public static class VenueItem {
+        private final int id;
         private final int number;
-        private final String venue;
+        private final String[] data;
 
-        public VenueItem(int number, String venue) {
+        public VenueItem(int number, String[] data) {
+            this.id = number; // Assign ID as number initially
             this.number = number;
-            this.venue = venue;
+            this.data = data;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public int getNumber() {
             return number;
         }
 
+        public String getData(int index) {
+            return data[index];
+        }
+
         public String getVenue() {
-            return venue;
+            return data[1]; // Assuming index 1 is the venue name in your CSV
         }
     }
 }
