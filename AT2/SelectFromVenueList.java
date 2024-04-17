@@ -18,8 +18,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class SelectFromVenueList extends Application {
@@ -42,6 +40,11 @@ public class SelectFromVenueList extends Application {
         TableColumn<VenueItem, String> venueColumn = new TableColumn<>("Venue");
         venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVenue()));
 
+        // Set column resizing policy for the "Venue" column only
+        venueColumn.setResizable(true);
+        venueColumn.setMinWidth(800);
+        venueColumn.setMaxWidth(Double.MAX_VALUE); // Allow it to expand
+
         tableView.getColumns().addAll(numberColumn, venueColumn);
         tableView.setItems(venueItems);
 
@@ -62,8 +65,8 @@ public class SelectFromVenueList extends Application {
         exitButton.setOnAction(event -> primaryStage.close());
 
         // Layout
-        VBox vbox = new VBox(100);
-        HBox hbox = new HBox(100);
+        VBox vbox = new VBox(10);
+        HBox hbox = new HBox(10);
         ScrollPane scrollPane = new ScrollPane(tableView);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
