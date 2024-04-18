@@ -13,6 +13,7 @@ class Venue {
 	private int capacity;
 	private String suitableFor;
 	private String category;
+	private int id;
 
 	// Constructor
 	public Venue(String name, int capacity, String suitableFor, String category) {
@@ -20,6 +21,7 @@ class Venue {
 		this.capacity = capacity;
 		this.suitableFor = suitableFor;
 		this.category = category;
+		this.id = id;
 	}
 
 	public Venue(String string, String string2, int i) {
@@ -50,5 +52,13 @@ class Venue {
 		return suitableFor;
 	}
 
+	//Getter and setter for ID for use in SelectByCategory
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 	
 }

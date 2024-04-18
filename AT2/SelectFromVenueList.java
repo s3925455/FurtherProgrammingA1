@@ -70,8 +70,8 @@ public class SelectFromVenueList extends Application {
         exitButton.setOnAction(event -> primaryStage.close());
 
         // Layout
-        VBox vbox = new VBox(10);
-        HBox hbox = new HBox(10);
+        VBox vbox = new VBox(20);
+        HBox hbox = new HBox(20);
         ScrollPane scrollPane = new ScrollPane(tableView);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
