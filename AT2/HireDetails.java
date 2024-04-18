@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ShowHiringMenu extends Application {
+public class HireDetails extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -104,9 +104,4 @@ public class ShowHiringMenu extends Application {
         String args = null;
 		launch(args);
     }
-
-	public static void showMenu(Venue selectedVenue) {
-		// TODO Auto-generated method stub
-		
-	}
 }

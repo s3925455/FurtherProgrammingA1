@@ -10,13 +10,13 @@ package AT2;
 //Venue class representing venue information
 class Venue {
 	private String name;
-	private int capacity;
+	private String capacity;
 	private String suitableFor;
 	private String category;
 	private int id;
 
 	// Constructor
-	public Venue(String name, int capacity, String suitableFor, String category) {
+	public Venue(String name, String capacity, String suitableFor, String category) {
 		this.name = name;
 		this.capacity = capacity;
 		this.suitableFor = suitableFor;
@@ -40,7 +40,7 @@ class Venue {
 		return name;
 	}
 
-	public int getCapacity() {
+	public String getCapacity() {
 		return capacity;
 	}
 
@@ -60,5 +60,10 @@ class Venue {
     public void setId(int id) {
         this.id = id;
     }
+
+	public String getRate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
