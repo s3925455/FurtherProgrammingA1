@@ -115,7 +115,7 @@ public class VenueMatcher extends Application {
 
     private void launchSelectByCategory(Stage primaryStage) {
         try {
-            SelectByCategory selectByCategory = new SelectByCategory(null);
+            SelectByCategory selectByCategory = new SelectByCategory();
             selectByCategory.start(new Stage()); // Create a new stage for SelectByCategory
         } catch (Exception e) {
             e.printStackTrace();

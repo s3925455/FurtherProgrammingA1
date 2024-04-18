@@ -16,7 +16,7 @@ class Venue {
 	private int id;
 
 	// Constructor
-	public Venue(String name, String capacity, String suitableFor, String category) {
+	public Venue(String name, String capacity, String suitableFor, String category, int id) {
 		this.name = name;
 		this.capacity = capacity;
 		this.suitableFor = suitableFor;
@@ -25,6 +25,10 @@ class Venue {
 	}
 
 	public Venue(String string, String string2, int i) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Venue(String name2, int capacity, String category, String suitableFor) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -40,11 +40,22 @@ public class SaveHiringDetails {
 			orderSummaries.add(orderSummary);
 
 			//*** String for saving to file ***
-			String finalSummary = String.format("%s,%s,%s,%s,%s,%s,%d,%s,%s",
-	                requesterName, venue.getName(), eventName, artistName, date, time, numberOfHours, eventType, getCategoryChoice(0));
+			String finalSummary = null;
+			try {
+				finalSummary = String.format("%s,%s,%s,%s,%s,%s,%d,%s,%s",
+				        requesterName, venue.getName(), eventName, artistName, date, time, numberOfHours, eventType, getCategoryChoice(0));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			finalSummaries.add(finalSummary);
 
 		}
+
+	private static String getCategoryChoice(Object categoryChoice2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -1,6 +1,8 @@
 package AT2;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -10,28 +12,25 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import AT2.SelectFromVenueList.VenueItem;
 
 public class SelectByCategory extends Application {
 
-    private List<Venue> venues;
+    private List<Venue> venues = new ArrayList<>();
+    private ObservableList<VenueItem> venueItems = FXCollections.observableArrayList();
 
-    public SelectByCategory(Object object) {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
+    @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Select Venue by Category");
 
-        FileHandler fileHandler = new FileHandler();
-        try {
-            venues = fileHandler.readVenuesFromFile("venues.csv");
-        } catch (CustomException e) {
-            showAlert("Error", e.getMessage());
-            return;
-        }
+        // Read venues from CSV file and populate the TableView
+        readVenuesFromFile("venues.csv");
 
         // Create components
         Label categoryLabel = new Label("Select Category:");
@@ -60,18 +59,17 @@ public class SelectByCategory extends Application {
         System.out.println("Selected Category: " + category);
 
         List<Venue> selectedVenues = new ArrayList<>();
-        
+
         for (Venue venue : venues) {
             if (venue.getCategory().equalsIgnoreCase(category)) {
-                selectedVenues.add( venue);
+                selectedVenues.add(venue);
             }
         }
 
         if (selectedVenues.isEmpty()) {
-            showAlert("No Venues Available", "There are no venues available for the selected category.");
+            showAlert("No Venues Available", "There are no venues available for the selected category: " + category);
         } else {
             displayVenues(selectedVenues);
-
         }
     }
 
@@ -81,18 +79,14 @@ public class SelectByCategory extends Application {
 
         VBox vbox = new VBox(10);
 
-        // Initialize a counter for the unique IDs
         int uniqueId = 1;
 
         for (Venue venue : venues) {
-            // Format the venue information with a unique ID
-//            String venueInfo = uniqueId + ": " + venue.getId() + " - " + venue.getName();
             String venueInfo = uniqueId + " - " + venue.getName();
 
             Label venueLabel = new Label(venueInfo);
             vbox.getChildren().add(venueLabel);
 
-            // Increment the unique ID for the next record
             uniqueId++;
         }
 
@@ -111,6 +105,7 @@ public class SelectByCategory extends Application {
         venueStage.setScene(scene);
         venueStage.show();
     }
+
     private void handleUserInput(String userInput, List<Venue> venues, Stage venueStage) {
         try {
             int selectedId = Integer.parseInt(userInput);
@@ -125,13 +120,29 @@ public class SelectByCategory extends Application {
         }
     }
 
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void readVenuesFromFile(String filename) {
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String[] data = scanner.nextLine().split(",");
+                // Assuming data order is: name, capacity, category, suitableFor
+                venues.add(new Venue(data[0], data[1], data[2], data[3], 0));
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            showAlert("Error", "Failed to read venues from file: " + filename);
+        }
     }
 
     public static void main(String[] args) {
