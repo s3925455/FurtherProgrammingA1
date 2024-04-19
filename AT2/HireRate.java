@@ -43,9 +43,9 @@ public class HireRate extends Application {
         ShowHiringMenu.showMenu(null);
     }
 
-    public static void setVenueDetails(String name, String rate) {
+    public static void setVenueDetails(String name, String string) {
         selectedVenueName = name;
-        selectedVenueRate = rate;
+        selectedVenueRate = string;
         Object selectedVenueLabel = null;
 		Labeled selectedRateLabel = null;
 		// Update labels if the UI is already initialized

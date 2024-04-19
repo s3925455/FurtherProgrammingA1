@@ -84,7 +84,8 @@ public class SelectByCategory extends Application {
 
         for (Venue venue : venues) {
             String venueInfo = uniqueId + " - " + venue.getName();
-
+            
+            System.out.println(venue.getName() + " - "+ venue.getCapacity()+ " - "+venue.getSuitableFor() + " - " +venue.getCategory()+  " - "+ venue.getRate()); ///for debugging
             Label venueLabel = new Label(venueInfo);
             vbox.getChildren().add(venueLabel);
 
@@ -113,7 +114,9 @@ public class SelectByCategory extends Application {
             if (selectedId >= 1 && selectedId <= venues.size()) {
                 Venue selectedVenue = venues.get(selectedId - 1);
                 showAlert("Venue Selected", "You selected: " + selectedVenue.getName());
+               
                 HireRate.setVenueDetails(selectedVenue.getName(), selectedVenue.getRate());
+
                 Stage primaryStage = null;
 				launchHireRate(primaryStage);
             } else {
@@ -139,10 +142,22 @@ public class SelectByCategory extends Application {
 
             while (scanner.hasNextLine()) {
                 String[] data = scanner.nextLine().split(",");
-                // Assuming data order is: name, capacity, category, suitableFor
-                venues.add(new Venue(data[0], data[1], data[2], data[3], 0));
-//                venues.add(new Venue(data[0], data[1], data[2], data[3], Integer.parseInt(data[4])));
-
+                if (data.length >= 5) {
+                    try {
+//                        venues.add(new Venue(data[0], data[1], data[2], data[3], Integer.parseInt(data[4]))); ///debug
+                        venues.add(new Venue(data[0], data[1], data[2], data[3], data[4]));
+                        
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing rate for venue: " + data[0]);
+                        
+                        
+//                        int DEFAULT_RATE = 250;  ///debug
+//						// Handle the error, e.g., set a default rate
+//                        venues.add(new Venue(data[0], data[1], data[2], data[3], DEFAULT_RATE ));
+                    }
+                } else {
+                    System.err.println("Invalid data format for venue: " + data[0]);
+                }
             }
 
             scanner.close();
