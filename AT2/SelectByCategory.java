@@ -24,6 +24,7 @@ public class SelectByCategory extends Application {
 
     private List<Venue> venues = new ArrayList<>();
     private ObservableList<VenueItem> venueItems = FXCollections.observableArrayList();
+    private List<String> columnHeadings = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -112,6 +113,9 @@ public class SelectByCategory extends Application {
             if (selectedId >= 1 && selectedId <= venues.size()) {
                 Venue selectedVenue = venues.get(selectedId - 1);
                 showAlert("Venue Selected", "You selected: " + selectedVenue.getName());
+                HireRate.setVenueDetails(selectedVenue.getName(), selectedVenue.getRate());
+                Stage primaryStage = null;
+				launchHireRate(primaryStage);
             } else {
                 showAlert("Error", "Invalid venue ID. Please enter a valid ID.");
             }
@@ -137,6 +141,8 @@ public class SelectByCategory extends Application {
                 String[] data = scanner.nextLine().split(",");
                 // Assuming data order is: name, capacity, category, suitableFor
                 venues.add(new Venue(data[0], data[1], data[2], data[3], 0));
+//                venues.add(new Venue(data[0], data[1], data[2], data[3], Integer.parseInt(data[4])));
+
             }
 
             scanner.close();
@@ -145,7 +151,19 @@ public class SelectByCategory extends Application {
         }
     }
 
+    
+    
+    
     public static void main(String[] args) {
         launch(args);
     }
+    
+    private void launchHireRate(Stage primaryStage) {
+        try {
+        	HireRate hireRate = new HireRate();
+        	hireRate.start(new Stage()); // Create a new stage for SelectFromVenueList
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+}
 }
