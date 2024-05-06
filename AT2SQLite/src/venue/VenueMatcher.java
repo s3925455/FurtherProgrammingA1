@@ -1,6 +1,7 @@
 package venue;
 
 import java.sql.Connection;
+
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -17,6 +18,7 @@ import javafx.scene.control.TextInputControl;
 import venue.DisplayOrderSummary;
 import venue.ShowBackup;
 import venue.UserAdmin;
+
 
 public class VenueMatcher extends Application {
 
@@ -136,6 +138,8 @@ public class VenueMatcher extends Application {
                         showAlert1("Error", " Nothing saved");// - DEBUGGING 
                         System.exit(0);
                     } finally {
+                    	
+
                         System.out.println("Exiting...");
                         ClearOrderSummaries();
                         System.exit(0);

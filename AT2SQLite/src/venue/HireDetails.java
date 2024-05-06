@@ -76,7 +76,7 @@ public class HireDetails extends Application {
 		ScrollPane scrollPane = new ScrollPane(vbox);
 		scrollPane.setFitToWidth(true); // Allow the scroll pane to resize horizontally
 
-		Scene scene = new Scene(scrollPane, 400, 400); // Use the scroll pane in the scene
+		Scene scene = new Scene(scrollPane, 400, 800); // Use the scroll pane in the scene
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -157,6 +157,11 @@ public class HireDetails extends Application {
 	
 	public static void main(String[] args) {
 	    Application.launch(args);
+	}
+
+	public static int getRate() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

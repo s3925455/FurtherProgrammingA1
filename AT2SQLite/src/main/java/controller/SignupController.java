@@ -15,6 +15,10 @@ import model.User;
 
 public class SignupController {
     @FXML
+    private TextField name;
+    @FXML
+    private TextField surname;
+    @FXML
     private TextField username;
     @FXML
     private TextField password;
@@ -38,10 +42,10 @@ public class SignupController {
     @FXML
     public void initialize() {
         createUser.setOnAction(event -> {
-            if (!username.getText().isEmpty() && !password.getText().isEmpty()) {
+            if (!name.getText().isEmpty() && !surname.getText().isEmpty() && !username.getText().isEmpty() && !password.getText().isEmpty()) {
                 User user;
                 try {
-                    user = model.getUserDao().createUser(username.getText(), password.getText());
+                    user = model.getUserDao().createUser(name.getText(), surname.getText(), username.getText(), password.getText()); // Pass name, surname, username, and password
                     if (user != null) {
                         status.setText("Created " + user.getUsername());
                         status.setTextFill(Color.GREEN);
@@ -51,14 +55,13 @@ public class SignupController {
                         status.setTextFill(Color.RED);
                     }
                 } catch (SQLException e) {
-//                    status.setText(e.getMessage());
-                	status.setText("Cannot create user- issue with username or password");
+                    status.setText("Cannot create user - issue with username or password");
                     status.setTextFill(Color.RED);
-                    clearFields(); // Clear the text fields after un-successful signup
+                    clearFields(); // Clear the text fields after unsuccessful signup
                 }
 
             } else {
-                status.setText("Empty username or password");
+                status.setText("Empty fields");
                 status.setTextFill(Color.RED);
             }
         });
@@ -69,8 +72,9 @@ public class SignupController {
         });
     }
 
+
     public void showStage(Pane root) {
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Sign up");
@@ -78,6 +82,8 @@ public class SignupController {
     }
 
     private void clearFields() {
+        name.clear();
+        surname.clear();
         username.clear();
         password.clear();
     }
