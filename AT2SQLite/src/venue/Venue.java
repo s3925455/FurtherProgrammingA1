@@ -124,4 +124,9 @@ public class Venue {
 	        return capacity.asObject();
 	    }
 
+		public String getFieldValue(String columnName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 }
