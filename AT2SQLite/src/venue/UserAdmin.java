@@ -39,6 +39,7 @@ public class UserAdmin extends Application {
         surnameField = new TextField();
         Label usernameLable = new Label("User Name:");
         usernameField = new TextField();
+        usernameField.setEditable(true); // Make usernameField uneditable
         Label userpasswordLable = new Label("User Password:");
         passwordField = new TextField();
         Button addButton = new Button("Add User");
@@ -105,6 +106,7 @@ public class UserAdmin extends Application {
             if (userDao.userExists(username)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "User already exists! Please choose a different username.");
             } else {
+            	
                 userDao.createUser(name, surname, username, password); // Pass name and surname to createUser method
                 showAlert(Alert.AlertType.INFORMATION, "User Added", "User successfully added!");
                 nameField.clear(); // Clear nameField after adding user
@@ -130,7 +132,21 @@ public class UserAdmin extends Application {
     }
 
     // ----delete user-------
+//    private void deleteUser(String username) throws SQLException {
+//        userDao.deleteUser(username);
+//        showAlert(Alert.AlertType.INFORMATION, "User Deleted", "User successfully deleted!");
+//        usernameField.clear(); // Clear usernameField after adding user
+//        passwordField.clear(); // Clear passwordField after adding user
+//    }
+    
     private void deleteUser(String username) throws SQLException {
+        // Check if the user being deleted is the same as the currently logged-in user
+        String loggedInUser = getUsernameOfLoggedInUser(); // You need to implement this method
+        if (loggedInUser.equals(username)) {
+            showAlert(Alert.AlertType.ERROR, "Error", "You cannot delete your own account.");
+            return; // Exit the method without performing deletion
+        }
+
         userDao.deleteUser(username);
         showAlert(Alert.AlertType.INFORMATION, "User Deleted", "User successfully deleted!");
         usernameField.clear(); // Clear usernameField after adding user
@@ -141,6 +157,7 @@ public class UserAdmin extends Application {
     private void searchUser(String username) throws SQLException {
         User user = userDao.getUserExist(username); // Change to use getUserExist method without password parameter
         if (user != null) {
+        	
             usernameField.setText(user.getUsername());
             passwordField.setText(user.getPassword());
             nameField.setText(user.getName()); // Set the nameField with user's name
@@ -148,6 +165,13 @@ public class UserAdmin extends Application {
             updateButton.setVisible(true);
             deleteButton.setVisible(true);
             showAlert(Alert.AlertType.INFORMATION, "User Found", "User found in the database.");
+            
+            if ("admin".equalsIgnoreCase(username)) { // Ignore case when comparing strings
+                usernameField.setEditable(false);
+                 
+                
+            }
+            
         } else {
             usernameField.clear();
             passwordField.clear();
@@ -166,5 +190,13 @@ public class UserAdmin extends Application {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    
+    //
+ // Method to get the username of the currently logged-in user (you need to implement this)
+    private String getUsernameOfLoggedInUser() {
+        // Implement logic to get the username of the logged-in user
+        // For demonstration purposes,  return a hardcoded username "admin"
+        return "admin";
     }
 }

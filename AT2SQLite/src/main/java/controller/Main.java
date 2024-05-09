@@ -43,7 +43,7 @@ public class Main extends Application {
             loginController.showStage(root);
         } catch (IOException | SQLException | RuntimeException e) {
             logger.error("Error initializing application: {}", e.getMessage());
-            Scene scene = new Scene(new Label(e.getMessage()), 200, 100);
+            Scene scene = new Scene(new Label(e.getMessage()), 250, 150);
             primaryStage.setTitle("Error");
             primaryStage.setScene(scene);
             primaryStage.show();

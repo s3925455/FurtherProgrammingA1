@@ -15,11 +15,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class SelectFromMatchingList extends Application {
@@ -45,10 +44,7 @@ public class SelectFromMatchingList extends Application {
 
             readColumnsFromDatabase(table1);
 
-            readVenuesFromDatabase();
-
-            ObservableList<Venue> venueList = FXCollections.observableArrayList(venues);
-            table1.setItems(venueList);
+            readVenuesFromDatabase(table1);
 
             Scene scene = new Scene(root, 920, 620);
             primaryStage.setScene(scene);
@@ -62,26 +58,61 @@ public class SelectFromMatchingList extends Application {
     }
 
     private void readColumnsFromDatabase(TableView<Venue> tableView) {
-        // Your database query to fetch column names
-        // For example, assuming there's a table named "venues" in your database
+        System.out.println("Loading columns from the database...");
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/amitmunjal/eclipse-workspace/FutureProgramWk9/application.db", "username", "password")) {
-            String query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'venues'";
+            // Use ResultSetMetaData to get column names
+            String query = "SELECT * FROM venues WHERE 1 = 0"; // This query returns an empty result set with column names
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String columnName = resultSet.getString("COLUMN_NAME");
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
                 TableColumn<Venue, String> column = new TableColumn<>(columnName);
                 column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFieldValue(columnName)));
                 tableView.getColumns().add(column);
+                System.out.println("Column added: " + columnName);
             }
+            System.out.println("Columns loaded successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.err.println("Error loading columns from the database: " + e.getMessage());
         }
     }
 
-    private void readVenuesFromDatabase() {
-        // Your database reading logic here
+    private void readVenuesFromDatabase(TableView<Venue> tableView) {
+        System.out.println("Loading venues from the database...");
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/amitmunjal/eclipse-workspace/FutureProgramWk9/application.db")) {
+            String query = "SELECT * FROM venues"; // the table name is 'venues'
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int venueId = resultSet.getInt("venueId");
+                    String name = resultSet.getString("name");
+                    int capacity = resultSet.getInt("capacity");
+                    String suitableFor = resultSet.getString("suitableFor");
+                    String category = resultSet.getString("category");
+                    int rate = resultSet.getInt("rate");
+                    Venue venue = new Venue(venueId, name, capacity, suitableFor, category, rate);
+                    venues.add(venue);
+                }
+                System.out.println("Venues loaded successfully.");
+
+                // Populate the TableView with the venues data
+                ObservableList<Venue> venueList = FXCollections.observableArrayList(venues);
+                tableView.setItems(venueList);
+
+                // Debugging: Print loaded data
+                for (Venue v : venueList) {
+                    System.out.println(v);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error loading venues from the database: " + e.getMessage());
+        }
     }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);

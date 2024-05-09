@@ -53,6 +53,7 @@ public class VenueMatcher extends Application {
         Button searchByName = new Button("Search by venue");
         Button autoMatchEvents = new Button("Auto-match events with suitable venues");
         Button showOrderSummary = new Button("Show order summary");
+        Button showUserAdmin = new Button("Add/Delete/Update user");
         Button saveExitButton = new Button("Save and Exit");
         Button exitButton = new Button("Exit");
 
@@ -61,25 +62,26 @@ public class VenueMatcher extends Application {
         searchByName.setOnAction(event -> handleUserInput("3", primaryStage));
         autoMatchEvents.setOnAction(event -> handleUserInput("4", primaryStage));
         showOrderSummary.setOnAction(event -> handleUserInput("5", primaryStage));
+        showUserAdmin.setOnAction(event -> handleUserInput("7", primaryStage));
         saveExitButton.setOnAction(event -> handleUserInput("8", primaryStage)); // Changed from "8" to match Save and Exit
         exitButton.setOnAction(event -> primaryStage.close());
 
         // Check if user is admin to show additional buttons
         if ("admin".equals(username)) { // Fixed the if condition
             Button showBackup = new Button("Backup: export/import file");
-            Button showUserAdmin = new Button("Add/Delete/Update user");
+//            Button showUserAdmin = new Button("Add/Delete/Update user");
 
             showBackup.setOnAction(event -> handleUserInput("6", primaryStage));
-            showUserAdmin.setOnAction(event -> handleUserInput("7", primaryStage));
+//            showUserAdmin.setOnAction(event -> handleUserInput("7", primaryStage));
 
             vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents,
-                    showOrderSummary, showBackup, showUserAdmin, saveExitButton, exitButton);
+                    showOrderSummary, showBackup,showUserAdmin, saveExitButton, exitButton);
         } else {
             vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents,
-                    showOrderSummary, saveExitButton, exitButton);
+                    showOrderSummary, showUserAdmin, saveExitButton, exitButton);
         }
 
-        Scene scene = new Scene(vbox, 400, 400);
+        Scene scene = new Scene(vbox, 1000, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

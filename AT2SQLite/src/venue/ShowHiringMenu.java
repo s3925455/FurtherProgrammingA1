@@ -52,7 +52,7 @@ public class ShowHiringMenu extends Application {
                 timeLabel, timeField, eventNameLabel, eventNameField, artistNameLabel, artistNameField,
                 requesterLabel, requesterField, eventTypeLabel, eventTypeField, confirmButton);
 
-        Scene scene = new Scene(vbox, 400, 400);
+        Scene scene = new Scene(vbox, 500, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
