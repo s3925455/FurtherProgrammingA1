@@ -137,6 +137,7 @@ public class HireDetails extends Application {
 
             // Launch the DisplayOrderSummary class with order summaries
             DisplayOrderSummary.display(orderSummaries);
+            
         } catch (NumberFormatException e) {
             showAlert("Invalid Input", "Please enter valid numbers for hours and attendance.");
         }
