@@ -1,15 +1,16 @@
 package venue;
 
 import java.sql.Connection;
-
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,7 +19,6 @@ import javafx.scene.control.TextInputControl;
 import venue.DisplayOrderSummary;
 import venue.ShowBackup;
 import venue.UserAdmin;
-
 
 public class VenueMatcher extends Application {
 
@@ -53,7 +53,7 @@ public class VenueMatcher extends Application {
         Button searchByName = new Button("Search by venue");
         Button autoMatchEvents = new Button("Auto-match events with suitable venues");
         Button showOrderSummary = new Button("Show order summary");
-        Button showUserAdmin = new Button("Add/Delete/Update user");
+        Button showUserAdmin = new Button("User Management");
         Button saveExitButton = new Button("Save and Exit");
         Button exitButton = new Button("Exit");
 
@@ -69,13 +69,11 @@ public class VenueMatcher extends Application {
         // Check if user is admin to show additional buttons
         if ("admin".equals(username)) { // Fixed the if condition
             Button showBackup = new Button("Backup: export/import file");
-//            Button showUserAdmin = new Button("Add/Delete/Update user");
 
             showBackup.setOnAction(event -> handleUserInput("6", primaryStage));
-//            showUserAdmin.setOnAction(event -> handleUserInput("7", primaryStage));
 
             vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents,
-                    showOrderSummary, showBackup,showUserAdmin, saveExitButton, exitButton);
+                    showOrderSummary, showBackup, showUserAdmin, saveExitButton, exitButton);
         } else {
             vbox.getChildren().addAll(listJobRequests, browseByCategory, searchByName, autoMatchEvents,
                     showOrderSummary, showUserAdmin, saveExitButton, exitButton);
@@ -96,7 +94,7 @@ public class VenueMatcher extends Application {
             int choice = Integer.parseInt(input);
             switch (choice) {
                 case 1:
-                    launchDisplayOldJobRequest(primaryStage); // Launch DisplayOldJobRequests
+                    launchDisplayOldJobRequest(primaryStage);
                     break;
                 case 2:
                     launchSelectByCategory(primaryStage);
@@ -120,42 +118,37 @@ public class VenueMatcher extends Application {
                     System.out.println("Handling option 7: Add/Delete/Update user...");
                     userAdmin(primaryStage);
                     break;
+                
                 case 8:
-                    System.out.println("Good Bye...");// for Debug
-                    final String TABLE_NAME = "requests";
+                    System.out.println("Venue Matcher : Option 8: Save and Exit...");
+                   
+                    List<String> finalSummaries = HireDetails.getFinalSummary();
 
-                    try (Connection con = Database.getConnection(); Statement stmt = con.createStatement()) {
-
-                        String query = "INSERT INTO " + TABLE_NAME + SaveHiringDetails1.getFinalSummaries();
-
-                        int result = stmt.executeUpdate(query);
-
-                        if (result > 0) {
-                            showAlert1("Success", "Records added to table " + TABLE_NAME);
-                        } else {
-                            showAlert("Error", "No records added to table " + TABLE_NAME);
-                        }
-                    } catch (SQLException e) {
-//                        showAlert1("Error", e.getMessage());
-                        showAlert1("Error", " Nothing saved");// - DEBUGGING 
-                        System.exit(0);
-                    } finally {
-                    	
-
-                        System.out.println("Exiting...");
-                        ClearOrderSummaries();
-                        System.exit(0);
+                    System.out.println("Venue Matcher: Final Summaries size: " + HireDetails.getFinalSummary().size()); // Debug: Print size of finalSummaries list
+                    for (String summary : finalSummaries) {
+                        System.out.println(summary);
                     }
-                    System.out.println("B R E A K ...");
+                    try {
+                        FileHandler fileHandler = new FileHandler();
+                        fileHandler.saveToDatabase(HireDetails.getFinalSummary());
+                        showAlert1("Success", "Records added to database");
+                    } catch (CustomException e) {
+                        showAlert1("Error", "Error saving data: " + e.getMessage());
+                    } finally {
+                        System.out.println("Exiting...");
+                        primaryStage.close();
+                    }
                     break;
-                default:
-                    showAlert("Invalid Input", "Please enter a valid menu option.");
+                    
+           
+//                    showAlert("Invalid Input", "Please enter a valid menu option.");
             }
         } catch (NumberFormatException e) {
             showAlert("Invalid Input", "Please enter a valid number.");
         }
     }
 
+    // Show Alert methods
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -172,6 +165,10 @@ public class VenueMatcher extends Application {
         alert.showAndWait();
     }
 
+
+
+    ///--------------------OTHER METHOS TO MANAGE USER SELECTION-------------
+    
     private void launchDisplayOldJobRequest(Stage primaryStage) {
         try {
             DisplayOldJobRequests displayOldJobRequest = new DisplayOldJobRequests();

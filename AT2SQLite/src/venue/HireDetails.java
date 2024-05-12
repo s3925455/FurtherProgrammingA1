@@ -26,8 +26,9 @@ public class HireDetails extends Application {
 		primaryStage.setTitle("Hiring Details");
 
 		Label venueLabel = new Label("Selected Venue: " + selectedVenueName); // Display the selected venue name
+		String venue = selectedVenueName;
 		Label rateLabel = new Label("Venue Rate: " + selectedVenueRate); // Display the selected venue rate
-
+			
 		Label requestLabel = new Label("Request Number:");
 		TextField requestField = new TextField();
 
@@ -81,52 +82,87 @@ public class HireDetails extends Application {
 		primaryStage.show();
 	}
 
-	private void handleConfirmation(String requesterName, String eventName, String artistName, String date, String time,
-			String attendance, String numberOfHours, String eventType, String category) {
-		if (requesterName.isEmpty() || eventName.isEmpty() || artistName.isEmpty() || date.isEmpty() || time.isEmpty()
-				|| attendance.isEmpty() || numberOfHours.isEmpty() || eventType.isEmpty() || category.isEmpty()) {
-			showAlert("Invalid Input", "Please fill in all fields.");
-			return;
-		}
+    // Method to handle confirmation and generate final summary
+    private void handleConfirmation(String requesterName, String eventName, String artistName, String date, String time,
+                                    String attendance, String numberOfHours, String eventType, String category) {
+        if (requesterName.isEmpty() || eventName.isEmpty() || artistName.isEmpty() || date.isEmpty() || time.isEmpty()
+                || attendance.isEmpty() || numberOfHours.isEmpty() || eventType.isEmpty() || category.isEmpty()) {
+            showAlert("Invalid Input", "Please fill in all fields.");
+            return;
+        }
 
-		if (!DateValidator.isValidDate(date)) {
-			showAlert("Invalid Date", "Please enter a valid date in dd/mm/yyyy format.");
-			return;
-		}
+        if (!DateValidator.isValidDate(date)) {
+            showAlert("Invalid Date", "Please enter a valid date in dd/mm/yyyy format.");
+            return;
+        }
 
-		if (!TimeValidator.isValidTime(time)) {
-			showAlert("Invalid Time", "Please enter a valid time in hh:mmam/pm format.");
-			return;
-		}
+        if (!TimeValidator.isValidTime(time)) {
+            showAlert("Invalid Time", "Please enter a valid time in hh:mmam/pm format.");
+            return;
+        }
 
-		try {
-			int hours = Integer.parseInt(numberOfHours);
-			int attandence = Integer.parseInt(attendance);
+        try {
+            int hours = Integer.parseInt(numberOfHours);
+            int attendanceValue = Integer.parseInt(attendance);
 
-			// Proceed with handling the confirmation
-			// Add the order summary to the list
-			orderSummaries.add(generateOrderSummary(requesterName, hours, date, time, eventName, artistName,
-					requesterName, eventType));
+            // Proceed with handling the confirmation
+            // Add the order summary to the list
+            orderSummaries.add(generateOrderSummary(requesterName, hours, date, time, eventName, artistName,
+                    requesterName, eventType));
 
-			//Final order summary for saving
-			finalSummaries.add(generateFinalSummary(requesterName, eventName, artistName, date, time, attendance, hours,
-					eventType, category));
+            double total = 0;
+            Object commission = null;
+            Object venue= selectedVenueName;
+			// Final order summary for saving
+            finalSummaries.add(generateFinalSummary(requesterName, eventName, artistName, date, time, attendanceValue, hours,
+                    eventType, category, total, commission, venue));
+            
+            // Debug: Print contents of finalSummaries
+            System.out.println("HireDetails: Contents of finalSummaries after adding data:");
+            for (String summary : finalSummaries) {
+                System.out.println(summary);
+            }
 
-			showAlert("Order Confirmed", "Hiring details saved successfully.");
+            // Debug: Check if finalSummaries is null
+            if (finalSummaries == null) {
+                System.out.println("HireDetails: finalSummaries is null.");
+            } else {
+                System.out.println("HireDetails: finalSummaries has data.");
+            }
 
-			// Launch the DisplayOrderSummary class with order summaries
-			DisplayOrderSummary.display(orderSummaries);
-		} catch (NumberFormatException e) {
-			showAlert("Invalid Input", "Please enter valid numbers for hours and attendance.");
-		}
-	}
+            // Debug: Check size of finalSummaries
+            System.out.println("HireDetails: Size of finalSummaries: " + finalSummaries.size());
 
-	private String generateFinalSummary(String requesterName, String eventName, String artistName, String date,
-			String time, String attendance, int hours, String eventType, String category) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            showAlert("Order Confirmed", "Order Successful.");
 
+            // Launch the DisplayOrderSummary class with order summaries
+            DisplayOrderSummary.display(orderSummaries);
+        } catch (NumberFormatException e) {
+            showAlert("Invalid Input", "Please enter valid numbers for hours and attendance.");
+        }
+    }
+	
+	
+	//---- Final summary to save to SQLite data base
+    private String generateFinalSummary(String requesterName, String eventName, String artistName, String date,
+            String time, int attendanceValue, int hours, String eventType, String category, double total, Object commission, Object venue) {
+        // Calculate total cost and commission
+        double totalCost = hours * HireRate.getRate();
+        double commissionValue = totalCost * 0.1; // Assuming commission is 10% of totalCost
+        
+        // Generate the final summary with placeholders for each column
+        String finalSummary = String.format("%s, %s, %s, %s, %s, %d, %d, %s, %s, %.2f, %.2f, %s",
+                requesterName, eventName, artistName, date, time, attendanceValue, hours, eventType, category, totalCost, commissionValue, venue);
+        
+        return finalSummary;
+    }
+	
+	
+
+
+	
+	
+			// ------Order summary to display on screen 
 	private String generateOrderSummary(String requestNumber, int numberOfHours, String date, String time,
 			String eventName, String artistName, String requesterName, String eventType) {
 		return String.format(
@@ -134,8 +170,8 @@ public class HireDetails extends Application {
 						+ "Client: %s\n" + "Venue: %s\n" + "Event name: %s\n" + "Artist: %s\n"
 						+ "Event date (dd/mm/yyyy): %s\n" + "Event time: %s\n"
 						+ "%d hours venue hire @ $%d - Total Cost: $%.2f\n" + "Brokering commission 10%%: $%.2f\n",
-				requestNumber, requesterName, selectedVenueName, eventName, artistName, date, time, numberOfHours,
-				numberOfHours * HireRate.getRate(), (double) (numberOfHours * HireRate.getRate()),
+				requestNumber, requesterName, selectedVenueName, eventName, artistName, date, time, numberOfHours, HireRate.getRate(), 
+				(double) (numberOfHours * HireRate.getRate()),
 				(double) (numberOfHours * HireRate.getRate()) * 0.1);
 	}
 
@@ -162,6 +198,10 @@ public class HireDetails extends Application {
 	public static int getRate() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public static List<String> getFinalSummary() {
+	    return finalSummaries; 
 	}
 
 }

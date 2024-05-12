@@ -65,7 +65,7 @@ public class UserAdmin extends Application {
         
         updateButton.setOnAction(event -> {
             try {
-                updateUser(usernameField.getText(), passwordField.getText());
+                updateUser(nameField.getText(), surnameField.getText(), usernameField.getText(), passwordField.getText());
             } catch (SQLException e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to update user: " + e.getMessage());
             }
@@ -120,25 +120,22 @@ public class UserAdmin extends Application {
     }
 
     ///---UPDATE User----
-    private void updateUser(String username, String password) throws SQLException {
-        String name = nameField.getText(); // Get the name from nameField
-        String surname = surnameField.getText(); // Get the surname from surnameField
-        userDao.updateUser(name, surname, username, password);
+    private void updateUser( String name, String surname,String username, String password) throws SQLException {
+        String nameNew = nameField.getText(); // Get the name from nameField
+        String surnameNew = surnameField.getText(); // Get the surname from surnameField
+        String usernameNew = usernameField.getText(); // Get the username from usernameField
+        String passwordNew = passwordField.getText(); // Get the surname from passwordField
+        userDao.updateUser(nameNew, surnameNew, usernameNew, passwordNew);
         showAlert(Alert.AlertType.INFORMATION, "User Updated", "User successfully updated!");
         usernameField.clear(); // Clear usernameField after updating user
         passwordField.clear(); // Clear passwordField after updating user
         nameField.clear(); // Clear nameField after updating user
         surnameField.clear(); // Clear surnameField after updating user
+        usernameField.clear(); // Clear usernameField after adding user
+        passwordField.clear(); // Clear passwordField after adding user
     }
 
-    // ----delete user-------
-//    private void deleteUser(String username) throws SQLException {
-//        userDao.deleteUser(username);
-//        showAlert(Alert.AlertType.INFORMATION, "User Deleted", "User successfully deleted!");
-//        usernameField.clear(); // Clear usernameField after adding user
-//        passwordField.clear(); // Clear passwordField after adding user
-//    }
-    
+    //-- DELETE User---
     private void deleteUser(String username) throws SQLException {
         // Check if the user being deleted is the same as the currently logged-in user
         String loggedInUser = getUsernameOfLoggedInUser(); // You need to implement this method

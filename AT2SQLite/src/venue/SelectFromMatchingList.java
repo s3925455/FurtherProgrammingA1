@@ -10,7 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,10 +19,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class SelectFromMatchingList extends Application {
 
     private List<Venue> venues = new ArrayList<>();
+    
+//    private FileHandler fileHandler = new FileHandler(); // Instantiate FileHandler
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,31 +39,40 @@ public class SelectFromMatchingList extends Application {
             TableView<Venue> table1;
             if (controller != null) {
                 table1 = controller.getTable1();
+
+                
             } else {
                 table1 = new TableView<>();
                 VBox vbox = new VBox(table1);
                 root.getChildren().add(vbox);
+                
+
             }
-
-            readColumnsFromDatabase(table1);
-
-            readVenuesFromDatabase(table1);
 
             Scene scene = new Scene(root, 920, 620);
             primaryStage.setScene(scene);
             primaryStage.setTitle("MatchMaker");
             primaryStage.show();
             System.out.println("FXML loaded successfully");
+            
+            //- Colums
+            readColumnsFromDatabase(table1);
+           //-Data from table
+            readVenuesFromDatabase(table1);
+            
         } catch (Exception e) {
             showAlert("Error", "Failed to load table data.");
             e.printStackTrace();
         }
+        
     }
 
+    // read COLUM names 
     private void readColumnsFromDatabase(TableView<Venue> tableView) {
-        System.out.println("Loading columns from the database...");
+        
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/amitmunjal/eclipse-workspace/FutureProgramWk9/application.db", "username", "password")) {
             // Use ResultSetMetaData to get column names
+        	System.out.println("Loading columns from the database...");
             String query = "SELECT * FROM venues WHERE 1 = 0"; // This query returns an empty result set with column names
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
@@ -79,7 +91,19 @@ public class SelectFromMatchingList extends Application {
             System.err.println("Error loading columns from the database: " + e.getMessage());
         }
     }
-
+    
+    
+////   // ---- READ VENUES 
+//    private void readVenuesFromDatabase(TableView<Venue> tableView) {
+//    	// Read venues from database using FileHandler
+//    			try {
+//    				venues = fileHandler.readVenuesFromDatabase();
+//    			} catch (CustomException e) {
+//    				e.printStackTrace(); // Handle exception as needed
+//    			}
+//    }
+    
+   
     private void readVenuesFromDatabase(TableView<Venue> tableView) {
         System.out.println("Loading venues from the database...");
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/amitmunjal/eclipse-workspace/FutureProgramWk9/application.db")) {
