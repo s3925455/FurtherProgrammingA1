@@ -1,24 +1,15 @@
 package venue;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import dao.Database;
 import javafx.scene.control.TextInputControl;
-import venue.DisplayOrderSummary;
-import venue.ShowBackup;
-import venue.UserAdmin;
 
 public class VenueMatcher extends Application {
 
@@ -120,7 +111,7 @@ public class VenueMatcher extends Application {
                     break;
                 
                 case 8:
-                    System.out.println("Venue Matcher : Option 8: Save and Exit...");
+                    System.out.println("Venue Matcher : Option 8: Save and Exit...");//DeBug statement
                    
                     List<String> finalSummaries = HireDetails.getFinalSummary();
 
@@ -140,8 +131,7 @@ public class VenueMatcher extends Application {
                     }
                     break;
                     
-           
-//                    showAlert("Invalid Input", "Please enter a valid menu option.");
+          
             }
         } catch (NumberFormatException e) {
             showAlert("Invalid Input", "Please enter a valid number.");
@@ -240,4 +230,6 @@ public class VenueMatcher extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    
 }
